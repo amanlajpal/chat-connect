@@ -1,6 +1,6 @@
 // Code: Main App component
 import './App.css'
-import { Authentication } from '@/components/ui/authentication'
+import { Authentication } from '@/pages/authentication'
 
 function App() {
   return (

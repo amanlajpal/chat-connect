@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/common/button";
 import {
   Card,
   CardContent,
@@ -6,10 +6,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/components/ui/common/card";
+import { Input } from "@/components/ui/common/input";
+import { Label } from "@/components/ui/common/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/common/tabs";
+import { Link } from "react-router-dom";
+
 
 export function Authentication() {
   return (
@@ -38,7 +40,9 @@ export function Authentication() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Login</Button>
+              <Button>
+                <Link to={'/home'}>Login</Link>
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -65,7 +69,9 @@ export function Authentication() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Signup</Button>
+              <Button asChild>
+                <Link to={'/home'}>Signup</Link>
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
