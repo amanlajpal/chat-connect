@@ -3,10 +3,11 @@ import { Button } from "../common/button";
 import { Textarea } from "../common/textarea";
 import { AiOutlineSend } from "react-icons/ai";
 import { useSelector } from "react-redux";
+import { getStompClient } from "@/connections/stompClient";
 
 function ChatInput() {
   const [messageInput, setMessageInput] = useState("");
-  const stompClient = useSelector((state: any) => state?.stompClient?.value);
+  const stompClient = getStompClient();
   const username = useSelector((state: any) => state?.username?.value);
   function sendMessage(messageInput: any) {
     var messageContent = messageInput.trim();
