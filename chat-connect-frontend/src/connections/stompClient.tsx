@@ -1,16 +1,17 @@
 import { ToastAction } from "@/components/ui/common/toast";
 import { useToast } from "@/components/ui/common/use-toast";
 import { setConnectionStatus } from "@/store/connectionStatusSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 let stompClient: any = null;
 export const initializeStompClient = (username: any) => {
+  console.log(username, "username - initialize stomp client!")
   const { toast } = useToast();
   const dispatch = useDispatch();
-  // const username = useSelector((state: any) => state?.username?.value);
   let socket = new SockJS("http://localhost:8080/ws");
+  console.log(socket, "socket");
   stompClient = Stomp.over(socket);
   stompClient = stompClient
     ?.connect({}) // connect to the server

@@ -1,13 +1,20 @@
 // Code: Main App component
-import './App.css'
-import { Authentication } from '@/pages/authentication'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Authentication } from "@/pages/authentication";
+import "./App.css";
+import Home from "./pages/home";
 
 function App() {
   return (
     <>
-      <Authentication />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Authentication />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
