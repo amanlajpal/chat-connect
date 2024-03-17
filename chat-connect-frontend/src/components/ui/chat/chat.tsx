@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/common/card";
 import { useState } from "react";
 
-function Chat() {
+function Chat(props: any) {
+  const { chat } = props;
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
@@ -30,19 +31,29 @@ function Chat() {
             active:bg-gray-300
             focus:outline-none 
             h-20
-            ${isClicked ? 'bg-gray-200' : ''}
+            ${isClicked ? "bg-gray-200" : ""}
         `}
         onClick={handleClick}
       >
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>DP</AvatarFallback>
+          <AvatarFallback>
+            {chat?.name?.slice(0, 2)?.toUpperCase() || "DP"}
+          </AvatarFallback>
         </Avatar>
         <CardHeader className="py-3">
-          <CardTitle>Deep</CardTitle>
-          <CardDescription>Last chat message!</CardDescription>
+          <CardTitle>{chat?.name}</CardTitle>
+          {chat?.lastMessage ? (
+            <CardDescription>{chat?.lastMessage}</CardDescription>
+          ) : (
+            <CardDescription className="text-muted-foreground">
+              No messages yet
+            </CardDescription>
+          )}
         </CardHeader>
-        <p className="text-right text-sm text-muted-foreground ml-auto">12:00 PM</p>
+        <p className="text-right text-sm text-muted-foreground ml-auto">
+          {chat?.lastMessageTime}
+        </p>
       </Card>
     </div>
   );

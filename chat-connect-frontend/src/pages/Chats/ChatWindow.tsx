@@ -6,15 +6,19 @@ import {
   AvatarImage,
 } from "@/components/ui/common/avatar";
 
-function ChatWindow() {
+function ChatWindow(props: any) {
+  const { chat } = props;
+
   return (
     <section className="h-full">
       <header className="flex items-center h-[10%] border-b border-inherit">
         <Avatar className="ml-8">
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>DP</AvatarFallback>
+          <AvatarFallback>
+            {chat?.name?.slice(0, 2)?.toUpperCase() || "DP"}
+          </AvatarFallback>
         </Avatar>
-        <h2 className="mx-4">Deep</h2>
+        <h2 className="mx-4">{chat?.name}</h2>
       </header>
       <div
         className="

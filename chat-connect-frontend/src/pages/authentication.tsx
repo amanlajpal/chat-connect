@@ -34,12 +34,14 @@ export function Authentication() {
   console.log(connectionStatus, "connection status!");
   const dispatch = useDispatch();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     dispatch(setConnectionStatus("connecting"));
     let username = signupData?.name.trim();
     dispatch(setUsername(username));
-    if (username) {
-      initializeStompClient(username);
+    if(username) {
+      const initiatedStompClient = await initializeStompClient(username)
+      console.log(initiatedStompClient);
+      dispatch(setConnectionStatus("connected"));
     }
   };
   return (
