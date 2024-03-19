@@ -2,18 +2,24 @@ import { useState } from "react";
 import { Button } from "../common/button";
 import { Textarea } from "../common/textarea";
 import { AiOutlineSend } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getStompClient } from "@/connections/stompClient";
+import { addChatMessageSentBySender } from "@/store/chatsSlice";
 
 function ChatInput() {
   const [messageInput, setMessageInput] = useState("");
   const stompClient = getStompClient();
   const username = useSelector((state: any) => state?.username?.value);
+  const selectedChat = useSelector((state: any) => {
+    return state?.chats?.value?.find((chat: any) => chat.isSelected === true);
+  });
+  const dispatch = useDispatch();
   function sendMessage(messageInput: any) {
     var messageContent = messageInput.trim();
     if (messageContent && stompClient) {
       var chatMessage = {
         sender: username,
+        receiver: selectedChat?.sender,
         content: messageContent,
         type: "CHAT",
       };
@@ -21,6 +27,12 @@ function ChatInput() {
         "/app/chat.sendMessage",
         {},
         JSON.stringify(chatMessage)
+      );
+      dispatch(
+        addChatMessageSentBySender({
+          ...chatMessage,
+          sentAt: new Date().toLocaleTimeString(),
+        })
       );
     }
   }

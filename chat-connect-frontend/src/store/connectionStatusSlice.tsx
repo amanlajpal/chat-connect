@@ -1,14 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const connectionStatusSlice = createSlice({
-  name: "username",
+  name: "connectionStatus",
   initialState: {
     value: "disconnected",
     message: "No connection",
   },
   reducers: {
     setConnectionStatus: (state, action) => {
-      state.value = action?.payload;
+      return {
+        ...state,
+        value: action?.payload,
+      };
     },
     reset: (state) => {
       state.value = "disconnected";

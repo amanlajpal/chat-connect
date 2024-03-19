@@ -9,14 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/common/card";
-import { useState } from "react";
 
 function Chat(props: any) {
-  const { chat } = props;
-  const [isClicked, setIsClicked] = useState(false);
+  const { chat, handleChatSelection } = props;
 
   const handleClick = () => {
-    setIsClicked(!isClicked);
+    handleChatSelection(chat);
   };
 
   return (
@@ -31,18 +29,18 @@ function Chat(props: any) {
             active:bg-gray-300
             focus:outline-none 
             h-20
-            ${isClicked ? "bg-gray-200" : ""}
+            ${chat?.isSelected ? "bg-gray-200" : ""}
         `}
         onClick={handleClick}
       >
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>
-            {chat?.name?.slice(0, 2)?.toUpperCase() || "DP"}
+            {chat?.sender?.slice(0, 2)?.toUpperCase() || "DP"}
           </AvatarFallback>
         </Avatar>
         <CardHeader className="py-3">
-          <CardTitle>{chat?.name}</CardTitle>
+          <CardTitle>{chat?.sender}</CardTitle>
           {chat?.lastMessage ? (
             <CardDescription>{chat?.lastMessage}</CardDescription>
           ) : (
@@ -52,7 +50,7 @@ function Chat(props: any) {
           )}
         </CardHeader>
         <p className="text-right text-sm text-muted-foreground ml-auto">
-          {chat?.lastMessageTime}
+          {chat?.lastMessageTime || "Just now"}
         </p>
       </Card>
     </div>
