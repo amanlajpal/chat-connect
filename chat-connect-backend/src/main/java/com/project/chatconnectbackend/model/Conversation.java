@@ -23,9 +23,9 @@ public class Conversation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer conversation_id;
+    private Integer id;
 
-    private Integer conversation_name;
+    private String conversation_name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<GroupMember> groupMembers;

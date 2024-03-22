@@ -1,6 +1,5 @@
 package com.project.chatconnectbackend.model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,13 +27,13 @@ public class GroupMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer group_member_id;
+    private Integer id;
 
     @CreationTimestamp
     private LocalDateTime joined_at;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date left_at;
+    private LocalDateTime left_at;
 
     @ManyToOne
     @JoinColumn(
