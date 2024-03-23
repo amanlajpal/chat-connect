@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import {
   initializeStompClient,
 } from "@/connections/stompClient";
+import axiosInstance from "@/connections/axiosInstance";
 
 export function Authentication() {
   const [signupData, setSignupData] = useState({
@@ -34,14 +35,26 @@ export function Authentication() {
   const username = useSelector((state: any) => state?.username?.value);
   console.log(username, "username - changed!")
   const handleSubmit = async () => {
-    dispatch(setConnectionStatus("connecting"));
-    let username = signupData?.name.trim();
-    dispatch(setUsername(username));
-    if (username) {
-      const initializedClient = await initializeStompClient(username);
-      console.log(initializedClient, "initialized client!");
-      dispatch(setConnectionStatus("connected"));
-    }
+    axiosInstance
+      .request({
+        method: "POST",
+        url: "/v1/register",
+        params: signupData,
+      })
+      .then((response) => {
+        console.log(response, "response!");
+      })
+      .catch((error) => {
+        console.log(error, "error!");
+      });
+    // dispatch(setConnectionStatus("connecting"));
+    // let username = signupData?.name.trim();
+    // dispatch(setUsername(username));
+    // if (username) {
+    //   const initializedClient = await initializeStompClient(username);
+    //   console.log(initializedClient, "initialized client!");
+    //   dispatch(setConnectionStatus("connected"));
+    // }
   };
 
   return (
