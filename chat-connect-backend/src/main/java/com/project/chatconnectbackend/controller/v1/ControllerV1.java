@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.chatconnectbackend.model.User;
 import com.project.chatconnectbackend.repository.UserRepository;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+
+@Validated
 @RestController // This means that this class is a Controller
 @RequestMapping(path = "/api/v1") // This means URL's start with /api/v1 (after Application path)
 public class ControllerV1 {
@@ -25,9 +32,9 @@ public class ControllerV1 {
 
   @PostMapping(path = "/register", produces = "application/json") // Map ONLY POST Requests
   public @ResponseBody ResponseEntity<Map<String, Object>> registerNewUser(
-      @RequestParam String name,
-      @RequestParam String phone,
-      @RequestParam String password) {
+      @Valid @RequestParam String name,
+      @Valid @Pattern(regexp = "\\d{10}", message = "Phone number must be a 10-digit string") @RequestParam String phone,
+      @Valid @RequestParam String password) {
     try {
       // @ResponseBody means the returned String is the response, not a view name
       // @RequestParam means it is a parameter from the GET or POST request
@@ -39,12 +46,12 @@ public class ControllerV1 {
       String firstName;
       String lastName;
       if (nameParts.length == 1) {
-          firstName = nameParts[0].trim(); // Use entire name as first name
-          lastName = ""; // Set last name to empty string
+        firstName = nameParts[0].trim(); // Use entire name as first name
+        lastName = ""; // Set last name to empty string
       } else {
-          // Use first part as first name and remaining parts as last name
-          firstName = nameParts[0].trim();
-          lastName = name.substring(name.indexOf(" ") + 1).trim();
+        // Use first part as first name and remaining parts as last name
+        firstName = nameParts[0].trim();
+        lastName = name.substring(name.indexOf(" ") + 1).trim();
       }
       newUser.setFirst_name(firstName);
       newUser.setLast_name(lastName);
@@ -60,6 +67,18 @@ public class ControllerV1 {
       responseBody.put("message", "User Saved");
 
       return ResponseEntity.ok(responseBody);
+    } catch (DataIntegrityViolationException e) {
+      // Handle unique constraint violation (e.g., duplicate phone number or email)
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User with the provided phone number or email already exists");
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponseBody);
+    } catch (EmptyResultDataAccessException e) {
+      // Handle case where no user is found
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User not found" + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseBody);
     } catch (Exception e) {
       // Return an error response if an exception occurs
       Map<String, Object> errorResponseBody = new HashMap<>();
