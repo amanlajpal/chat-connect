@@ -38,11 +38,14 @@ public class User {
     
     @Column(unique = true)
     @Size(min = 10, max = 10, message = "Phone number should be 10 digits")
+    @NotNull(message = "Phone number cannot be null")
     private String phone_number;
     
     @Column(unique = true) @Email(message = "Email should be valid")
     private String email;
     
+    @NotNull(message = "Password cannot be null")
+    @Size(min = 8, message = "Password should be at least 8 characters long")
     private String password;
     
     private String profile_photo;

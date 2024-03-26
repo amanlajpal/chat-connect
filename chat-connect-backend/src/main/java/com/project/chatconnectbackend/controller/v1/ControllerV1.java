@@ -41,6 +41,13 @@ public class ControllerV1 {
       User newUser = new User();
       // Split name by space
       String[] nameParts = name.split(" ");
+      String[] avatarUrls = new String[]{
+        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/BlueJay.png?raw=true",
+        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/Eagle.png?raw=true",
+        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/GreenParrot.png?raw=true",
+        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/Peacock.png?raw=true",
+        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/RedParrot.png?raw=true",
+      };
 
       // Check if name has only one part (no spaces)
       String firstName;
@@ -57,7 +64,7 @@ public class ControllerV1 {
       newUser.setLast_name(lastName);
       newUser.setPhone_number(phone);
       newUser.setPassword(password);
-      newUser.setProfile_photo("default.jpg");
+      newUser.setProfile_photo(avatarUrls[(int) (Math.random() * avatarUrls.length)]);
       userRepository.save(newUser);
 
       // Create the response body
@@ -88,9 +95,80 @@ public class ControllerV1 {
     }
   }
 
-  @GetMapping(path = "/all")
-  public @ResponseBody Iterable<User> getAllUsers() {
-    // This returns a JSON or XML with the users
-    return userRepository.findAll();
+  @PostMapping(path = "/login", produces = "application/json") // Map ONLY POST Requests
+  public @ResponseBody ResponseEntity<Map<String, Object>> loginUser(
+      @Valid @Pattern(regexp = "\\d{10}", message = "Phone number must be a 10-digit string") @RequestParam String phone,
+      @Valid @RequestParam String password) {
+    try {
+
+      User user = userRepository.findByPhoneAndPassword(phone, password);
+
+      if (user == null) {
+        // Handle case where no user is found
+        Map<String, Object> errorResponseBody = new HashMap<>();
+        errorResponseBody.put("status", "error");
+        errorResponseBody.put("message", "User not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseBody);
+      }
+
+      // Create the response body
+      Map<String, Object> responseBody = new HashMap<>();
+      responseBody.put("status", "success");
+      responseBody.put("data", user);
+      responseBody.put("message", "Logged in successfully");
+
+      return ResponseEntity.ok(responseBody);
+    } catch (DataIntegrityViolationException e) {
+      // Handle unique constraint violation (e.g., duplicate phone number or email)
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User with the provided phone number or email already exists");
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponseBody);
+    } catch (EmptyResultDataAccessException e) {
+      // Handle case where no user is found
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User not found" + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseBody);
+    } catch (Exception e) {
+      // Return an error response if an exception occurs
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "An error occurred: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseBody);
+    }
+  }
+
+  @GetMapping(path = "/allChats", produces = "application/json") // Map ONLY GET Requests
+  public @ResponseBody ResponseEntity<Map<String, Object>> getAllUsers() {
+    try {
+      // This returns a JSON or XML with the users
+      // Create the response body
+      Iterable<User> users = userRepository.findAll();
+      Map<String, Object> responseBody = new HashMap<>();
+      responseBody.put("status", "success");
+      responseBody.put("data", users);
+      responseBody.put("message", "Users fetched successfully!");
+
+      return ResponseEntity.ok(responseBody);
+    } catch (DataIntegrityViolationException e) {
+      // Handle unique constraint violation (e.g., duplicate phone number or email)
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User with the provided phone number or email already exists");
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponseBody);
+    } catch (EmptyResultDataAccessException e) {
+      // Handle case where no user is found
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "User not found" + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseBody);
+    } catch (Exception e) {
+      // Return an error response if an exception occurs
+      Map<String, Object> errorResponseBody = new HashMap<>();
+      errorResponseBody.put("status", "error");
+      errorResponseBody.put("message", "An error occurred: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseBody);
+    }
   }
 }
