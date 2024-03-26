@@ -19,11 +19,10 @@ import { setConnectionStatus } from "@/store/connectionStatusSlice";
 import { setUsername } from "@/store/usernameSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import {
-  initializeStompClient,
-} from "@/connections/stompClient";
+import { redirect, useNavigate } from "react-router-dom";
+import { initializeStompClient } from "@/connections/stompClient";
 import axiosInstance from "@/connections/axiosInstance";
+import { useToast } from "@/components/ui/common/use-toast";
 
 export function Authentication() {
   const [signupData, setSignupData] = useState({
@@ -31,9 +30,15 @@ export function Authentication() {
     phone: "",
     password: "",
   });
+  const [loginData, setLoginData] = useState({
+    phone: "",
+    password: "",
+  });
+  const { toast } = useToast();
   const dispatch = useDispatch();
   const username = useSelector((state: any) => state?.username?.value);
-  console.log(username, "username - changed!")
+  const navigate = useNavigate();
+  console.log(username, "username - changed!");
   const handleSubmit = async () => {
     axiosInstance
       .request({
@@ -43,9 +48,15 @@ export function Authentication() {
       })
       .then((response) => {
         console.log(response, "response!");
+        redirect("/home")
       })
       .catch((error) => {
         console.log(error, "error!");
+        toast({
+          title: `Signup Failed! ${error?.response?.data?.message}`,
+          description: `Please try again with a different phone number`,
+          variant: "destructive",
+        });
       });
     // dispatch(setConnectionStatus("connecting"));
     // let username = signupData?.name.trim();
@@ -56,7 +67,29 @@ export function Authentication() {
     //   dispatch(setConnectionStatus("connected"));
     // }
   };
-
+  const handleLogin = async () => {
+    axiosInstance
+      .request({
+        method: "POST",
+        url: "/v1/login",
+        params: loginData,
+      })
+      .then((response) => {
+        console.log(response, "response!");
+        navigate("/home")
+        toast({
+          title: response?.data?.message || "Login Successfull!",
+        });
+      })
+      .catch((error) => {
+        console.log(error, "error!");
+        toast({
+          title: error?.response?.data?.message || "Login Failed!",
+          description: `Please try again with a different phone number`,
+          variant: "destructive",
+        });
+      });
+  };
   return (
     <div className="flex items-center justify-center h-screen overflow-y-hidden">
       <Tabs defaultValue="login" className="w-[400px]">
@@ -75,16 +108,36 @@ export function Authentication() {
             <CardContent className="space-y-2">
               <div className="space-y-1">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" defaultValue="" />
+                <Input
+                  id="phone"
+                  value={loginData?.phone || ""}
+                  onChange={(event) =>
+                    setLoginData((prevLoginData) => {
+                      return { ...prevLoginData, phone: event?.target?.value };
+                    })
+                  }
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" defaultValue="" type="password" />
+                <Input
+                  id="password"
+                  type="password"
+                  value={loginData?.password || ""}
+                  onChange={(event) =>
+                    setLoginData((prevLoginData) => {
+                      return {
+                        ...prevLoginData,
+                        password: event?.target?.value,
+                      };
+                    })
+                  }
+                />
               </div>
             </CardContent>
             <CardFooter>
-              <Button>
-                <Link to={"/home"}>Login</Link>
+              <Button onClick={handleLogin}>
+                Login
               </Button>
             </CardFooter>
           </Card>
@@ -140,8 +193,8 @@ export function Authentication() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button asChild onClick={handleSubmit}>
-                <Link to={"/home"}>Signup</Link>
+              <Button onClick={handleSubmit}>
+                Signup
               </Button>
             </CardFooter>
           </Card>

@@ -24,7 +24,7 @@ function Chat(props: any) {
             flex 
             justify-left 
             items-center 
-            m-4 px-10
+            m-4 px-8
             hover:bg-gray-100 
             active:bg-gray-300
             focus:outline-none 
@@ -34,13 +34,13 @@ function Chat(props: any) {
         onClick={handleClick}
       >
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={chat?.profile_photo} />
           <AvatarFallback>
-            {chat?.sender?.slice(0, 2)?.toUpperCase() || "DP"}
+            {chat?.first_name?.slice(0, 2)?.toUpperCase() || "DP"}
           </AvatarFallback>
         </Avatar>
         <CardHeader className="py-3">
-          <CardTitle>{chat?.sender}</CardTitle>
+          <CardTitle>{chat?.first_name + " " + chat?.last_name}</CardTitle>
           {chat?.lastMessage ? (
             <CardDescription>{chat?.lastMessage}</CardDescription>
           ) : (
