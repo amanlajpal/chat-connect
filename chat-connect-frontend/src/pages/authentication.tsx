@@ -16,7 +16,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/common/tabs";
 import { setConnectionStatus } from "@/store/connectionStatusSlice";
-import { setUsername } from "@/store/usernameSlice";
+import { setUser } from "@/store/userSlice";
+import { joinChat } from "@/store/chatsSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect, useNavigate } from "react-router-dom";
@@ -36,9 +37,7 @@ export function Authentication() {
   });
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const username = useSelector((state: any) => state?.username?.value);
   const navigate = useNavigate();
-  console.log(username, "username - changed!");
   const handleSubmit = async () => {
     axiosInstance
       .request({
@@ -48,6 +47,24 @@ export function Authentication() {
       })
       .then((response) => {
         console.log(response, "response!");
+        dispatch(setUser({
+          id: response?.data?.data?.id,
+          firstName: response?.data?.data?.firstName,
+          lastName: response?.data?.data?.lastName,
+          phoneNumber: response?.data?.data?.phone,
+          email: response?.data?.data?.email,
+          profilePhoto: response?.data?.data?.profilePhoto,
+          createdAt: response?.data?.data?.createdAt,
+        }));
+        dispatch(
+          joinChat({
+            lastMessage: null,
+            lastMessageTime: null,
+            name: response?.data?.data?.firstName + " " + response?.data?.data?.lastName,
+            profilePhoto: response?.data?.data?.profilePhoto,
+            phoneNumber: response?.data?.data?.phone,
+          })
+        );
         redirect("/home")
       })
       .catch((error) => {
@@ -60,7 +77,7 @@ export function Authentication() {
       });
     // dispatch(setConnectionStatus("connecting"));
     // let username = signupData?.name.trim();
-    // dispatch(setUsername(username));
+    // dispatch(setUser(username));
     // if (username) {
     //   const initializedClient = await initializeStompClient(username);
     //   console.log(initializedClient, "initialized client!");
@@ -76,6 +93,24 @@ export function Authentication() {
       })
       .then((response) => {
         console.log(response, "response!");
+        dispatch(setUser({
+          id: response?.data?.data?.id,
+          firstName: response?.data?.data?.firstName,
+          lastName: response?.data?.data?.lastName,
+          phoneNumber: response?.data?.data?.phone,
+          email: response?.data?.data?.email,
+          profilePhoto: response?.data?.data?.profilePhoto,
+          createdAt: response?.data?.data?.createdAt,
+        }));
+        // dispatch(
+        //   joinChat({
+        //     lastMessage: null,
+        //     lastMessageTime: null,
+        //     name: response?.data?.data?.firstName + " " + response?.data?.data?.lastName,
+        //     profilePhoto: response?.data?.data?.profilePhoto,
+        //     phoneNumber: response?.data?.data?.phone,
+        //   })
+        // );
         navigate("/home")
         toast({
           title: response?.data?.message || "Login Successfull!",

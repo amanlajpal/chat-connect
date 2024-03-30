@@ -29,18 +29,18 @@ function Chat(props: any) {
             active:bg-gray-300
             focus:outline-none 
             h-20
-            ${chat?.isSelected ? "bg-gray-200" : ""}
+            ${chat?.selected ? "bg-gray-200" : ""}
         `}
         onClick={handleClick}
       >
         <Avatar>
-          <AvatarImage src={chat?.profile_photo} />
+          <AvatarImage src={chat?.profilePhoto} />
           <AvatarFallback>
-            {chat?.first_name?.slice(0, 2)?.toUpperCase() || "DP"}
+            {chat?.name?.slice(0, 2)?.toUpperCase() || "DP"}
           </AvatarFallback>
         </Avatar>
         <CardHeader className="py-3">
-          <CardTitle>{chat?.first_name + " " + chat?.last_name}</CardTitle>
+          <CardTitle>{chat?.name}</CardTitle>
           {chat?.lastMessage ? (
             <CardDescription>{chat?.lastMessage}</CardDescription>
           ) : (

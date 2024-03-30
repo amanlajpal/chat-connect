@@ -1,30 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface Chat {
+  selected?: boolean;
+  lastMessage?: string;
+  lastMessageTime?: string;
+  name?: string;
+  phoneNumber: string;
+  profilePhoto?: string;
+}
 const chatsSlice = createSlice({
   name: "chats",
   initialState: {
-    value: [
-        // {
-        //     sender: "ChatConnect",
-        //     content: "Welcome to ChatConnect!",
-        //     type: "JOIN",
-        // },
-    ],
+    value: [] as Chat[],
   },
   reducers: {
     joinChat: (state, action) => {
-      if (
-        !state.value.find(
-          (chat: any) => chat.sender === action?.payload?.sender
-        )
-      ){
-        state.value = [action?.payload, ...state.value];
-      }
+      const { lastMessage, lastMessageTime, name, profilePhoto, phoneNumber } =
+        action?.payload;
+      state.value.push({
+        lastMessage,
+        lastMessageTime,
+        name,
+        profilePhoto,
+        phoneNumber,
+        selected: false,
+      });
     },
     leaveChat: (state, action) => {
+      const phoneNumberOfLeaver: string = action?.payload;
       state.value = state.value.filter(
-        (chat: any) => chat.sender !== action?.payload?.sender
+        (chat: any) => chat.phoneNumber !== phoneNumberOfLeaver
       );
+    },
+    setFetchedChats: (state, action) => {
+      state.value = action?.payload;
     },
     setSelectedChat: (state, action) => {
       state.value = state.value.map((chat: any) => {
@@ -41,10 +50,7 @@ const chatsSlice = createSlice({
         (chat: any) => chat.sender === action?.payload?.sender
       );
       if (foundChat) {
-        foundChat.messages = [
-          ...(foundChat?.messages || []),
-          action?.payload,
-        ];
+        foundChat.messages = [...(foundChat?.messages || []), action?.payload];
       } else {
         state.value = [
           ...state.value,
@@ -60,10 +66,7 @@ const chatsSlice = createSlice({
         (chat: any) => chat.sender === action?.payload?.receiver
       );
       if (foundChat) {
-        foundChat.messages = [
-          ...(foundChat?.messages || []),
-          action?.payload,
-        ];
+        foundChat.messages = [...(foundChat?.messages || []), action?.payload];
       } else {
         state.value = [
           ...state.value,
@@ -80,7 +83,14 @@ const chatsSlice = createSlice({
   },
 });
 
-export const { joinChat, leaveChat, setSelectedChat, addChatMessage, addChatMessageSentBySender, reset } =
-  chatsSlice.actions;
+export const {
+  joinChat,
+  leaveChat,
+  setSelectedChat,
+  addChatMessage,
+  addChatMessageSentBySender,
+  reset,
+  setFetchedChats
+} = chatsSlice.actions;
 
 export default chatsSlice;
