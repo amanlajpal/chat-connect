@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,15 +33,18 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String message_text;
+    @Column(name = "message_text")
+    private String messageText;
 
-    private String from_number;
+    @Column(name = "from_number")
+    private String fromNumber;
 
     @Enumerated(EnumType.STRING)
     private MessageStatus status;
 
     @CreationTimestamp
-    private LocalDateTime sent_at;
+    @Column(name = "sent_at")
+    private LocalDateTime sentAt;
 
     @ManyToOne
     @JoinColumn(

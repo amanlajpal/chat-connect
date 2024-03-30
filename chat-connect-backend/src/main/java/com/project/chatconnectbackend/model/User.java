@@ -32,14 +32,16 @@ public class User {
     private Integer id;
     
     @NotNull(message = "Name cannot be null")
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
     
-    private String last_name;
+    @Column(name = "last_name")
+    private String lastName;
     
-    @Column(unique = true)
+    @Column(unique = true, name = "phone_number")
     @Size(min = 10, max = 10, message = "Phone number should be 10 digits")
     @NotNull(message = "Phone number cannot be null")
-    private String phone_number;
+    private String phoneNumber;
     
     @Column(unique = true) @Email(message = "Email should be valid")
     private String email;
@@ -48,10 +50,12 @@ public class User {
     @Size(min = 8, message = "Password should be at least 8 characters long")
     private String password;
     
-    private String profile_photo;
+    @Column(name = "profile_photo")
+    private String profilePhoto;
     
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<GroupMember> groupMembers;

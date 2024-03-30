@@ -1,5 +1,6 @@
 package com.project.chatconnectbackend.controller.v1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.chatconnectbackend.chat.Chat;
 import com.project.chatconnectbackend.model.User;
 import com.project.chatconnectbackend.repository.UserRepository;
 
+// import jakarta.persistence.PersistenceException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 
@@ -42,11 +45,11 @@ public class ControllerV1 {
       // Split name by space
       String[] nameParts = name.split(" ");
       String[] avatarUrls = new String[]{
-        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/BlueJay.png?raw=true",
-        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/Eagle.png?raw=true",
-        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/GreenParrot.png?raw=true",
-        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/Peacock.png?raw=true",
-        "https://github.com/amanlajpal/chat-connect/blob/aman/chat-connect-backend/src/main/resources/static/assets/images/RedParrot.png?raw=true",
+        "https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg",
+        "https://img.freepik.com/free-photo/3d-render-little-boy-with-eyeglasses-blue-shirt_1142-50994.jpg",
+        "https://img.freepik.com/free-photo/portrait-boy-blue-cap-glasses-3d-rendering_1142-40451.jpg",
+        "https://img.freepik.com/free-photo/3d-cartoon-style-character_23-2151034077.jpg",
+        "https://img.freepik.com/premium-photo/happy-3d-cartoon-man-using-laptop-siting-transparent-white-background_973886-19.jpg"
       };
 
       // Check if name has only one part (no spaces)
@@ -60,11 +63,11 @@ public class ControllerV1 {
         firstName = nameParts[0].trim();
         lastName = name.substring(name.indexOf(" ") + 1).trim();
       }
-      newUser.setFirst_name(firstName);
-      newUser.setLast_name(lastName);
-      newUser.setPhone_number(phone);
+      newUser.setFirstName(firstName);
+      newUser.setLastName(lastName);
+      newUser.setPhoneNumber(phone);
       newUser.setPassword(password);
-      newUser.setProfile_photo(avatarUrls[(int) (Math.random() * avatarUrls.length)]);
+      newUser.setProfilePhoto(avatarUrls[(int) (Math.random() * avatarUrls.length)]);
       userRepository.save(newUser);
 
       // Create the response body
@@ -74,24 +77,9 @@ public class ControllerV1 {
       responseBody.put("message", "User Saved");
 
       return ResponseEntity.ok(responseBody);
-    } catch (DataIntegrityViolationException e) {
-      // Handle unique constraint violation (e.g., duplicate phone number or email)
-      Map<String, Object> errorResponseBody = new HashMap<>();
-      errorResponseBody.put("status", "error");
-      errorResponseBody.put("message", "User with the provided phone number or email already exists");
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponseBody);
-    } catch (EmptyResultDataAccessException e) {
-      // Handle case where no user is found
-      Map<String, Object> errorResponseBody = new HashMap<>();
-      errorResponseBody.put("status", "error");
-      errorResponseBody.put("message", "User not found" + e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseBody);
-    } catch (Exception e) {
-      // Return an error response if an exception occurs
-      Map<String, Object> errorResponseBody = new HashMap<>();
-      errorResponseBody.put("status", "error");
-      errorResponseBody.put("message", "An error occurred: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseBody);
+    }
+    finally {
+     System.out.println("User saved");
     }
   }
 
@@ -101,7 +89,7 @@ public class ControllerV1 {
       @Valid @RequestParam String password) {
     try {
 
-      User user = userRepository.findByPhoneAndPassword(phone, password);
+      User user = userRepository.findByPhoneNumberAndPassword(phone, password);
 
       if (user == null) {
         // Handle case where no user is found
@@ -145,9 +133,21 @@ public class ControllerV1 {
       // This returns a JSON or XML with the users
       // Create the response body
       Iterable<User> users = userRepository.findAll();
+      ArrayList<Chat> chats = new ArrayList<>();
+      users.forEach(user -> {
+        user.setPassword(null);
+        chats.add(Chat.builder()
+          .fromNumber(user.getPhoneNumber())
+          .name(user.getFirstName() + " " + user.getLastName())
+          .profilePhoto(user.getProfilePhoto())
+          .status(null)
+          .lastMessage(null)
+          .lastMessageTime(null)
+          .build());
+      });
       Map<String, Object> responseBody = new HashMap<>();
       responseBody.put("status", "success");
-      responseBody.put("data", users);
+      responseBody.put("data", chats);
       responseBody.put("message", "Users fetched successfully!");
 
       return ResponseEntity.ok(responseBody);

@@ -7,8 +7,13 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.project.chatconnectbackend.model.Message;
+import com.project.chatconnectbackend.model.User;
+import com.project.chatconnectbackend.model.enumValues.MessageStatus;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.slf4j.Logger;
@@ -39,19 +44,21 @@ public class ChatController {
 
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
-    public ChatMessage addUser(
-            @Payload ChatMessage chatMessage,
+    public Chat addUser(
+            @Payload User user,
             SimpMessageHeaderAccessor headerAccessor) {
-
-        // TODO -- to be implemented
-        logger.info("User added in Chatroom: " + chatMessage.getSender());
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z");
-        Date date = new Date();
-        formatDate.setTimeZone(TimeZone.getTimeZone("IST"));
-        System.out.println(formatDate.format(date));
-        chatMessage.setSentAt(new Date());
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        logger.info("User added in Chatroom: " + headerAccessor);
-        return chatMessage;
+        logger.info("User joined chat connect: " + user.getPhoneNumber());
+        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+        if (sessionAttributes != null) {
+            sessionAttributes.put("fromNumber", user.getPhoneNumber());
+        }
+        logger.info("User Joined Chat connect - header accessor - " + headerAccessor);
+        Chat chat = new Chat();
+        chat.setFromNumber(user.getPhoneNumber());
+        chat.setLastMessage(null);
+        chat.setLastMessageTime(null);
+        chat.setName(user.getFirstName() + " " + user.getLastName());
+        chat.setProfilePhoto(user.getProfilePhoto());
+        return chat;
     }
 }
