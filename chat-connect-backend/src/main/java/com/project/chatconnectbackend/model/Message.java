@@ -51,6 +51,6 @@ public class Message {
         name = "conversation_id",
         foreignKey = @ForeignKey(name = "CONVERSATION_ID_FK_MESSAGE")
     )
-    private Conversation conversation;
+    private Conversation conversationId;
 
 }

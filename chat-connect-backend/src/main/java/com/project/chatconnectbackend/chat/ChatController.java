@@ -50,15 +50,16 @@ public class ChatController {
         logger.info("User joined chat connect: " + user.getPhoneNumber());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes != null) {
-            sessionAttributes.put("fromNumber", user.getPhoneNumber());
+            sessionAttributes.put("phoneNumber", user.getPhoneNumber());
         }
         logger.info("User Joined Chat connect - header accessor - " + headerAccessor);
         Chat chat = new Chat();
-        chat.setFromNumber(user.getPhoneNumber());
+        chat.setPhoneNumber(user.getPhoneNumber());
         chat.setLastMessage(null);
         chat.setLastMessageTime(null);
         chat.setName(user.getFirstName() + " " + user.getLastName());
         chat.setProfilePhoto(user.getProfilePhoto());
+        chat.setId(user.getId());
         return chat;
     }
 }

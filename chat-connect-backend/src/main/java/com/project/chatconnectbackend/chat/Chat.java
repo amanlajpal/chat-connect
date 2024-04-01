@@ -14,7 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Chat {
-    private String fromNumber;
+    private String phoneNumber;
+    private Integer id;
     private String lastMessage;
     private Date lastMessageTime;
     private String name;

@@ -47,5 +47,5 @@ public class GroupMember {
         name = "user_id",
         foreignKey = @ForeignKey(name = "USER_ID_FK")
     )
-    private Conversation users;
+    private User users;
 }

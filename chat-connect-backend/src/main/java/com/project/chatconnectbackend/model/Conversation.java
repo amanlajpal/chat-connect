@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,10 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String conversation_name;
+    @Column(name = "conversation_name")
+    private String conversationName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "group_members")
     Set<GroupMember> groupMembers;
 }
