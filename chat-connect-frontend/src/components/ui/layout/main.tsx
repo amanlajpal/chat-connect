@@ -13,27 +13,25 @@ import {
   getStompClient,
   initializeStompClient,
 } from "@/connections/stompClient";
-import { addChatMessage, joinChat, leaveChat, setFetchedChats } from "@/store/chatsSlice";
-
+import {
+  addChatMessage,
+  joinChat,
+  leaveChat,
+  setFetchedChats,
+  setSelectedChat,
+} from "@/store/chatsSlice";
+import { Chat as ChatInterface } from "@/interfaces/Chat";
 function Main() {
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<ChatInterface[]>([]);
+  const [selectedChatMessages, setSelectedChatMessages] = useState([]);
   const chatsFromGlobalState = useSelector((state: any) => {
-    return state?.chats?.value
+    return state?.chats?.value;
   });
   const user = useSelector((state: any) => state?.user?.value);
   const { toast } = useToast();
   const dispatch = useDispatch();
   const handleChatSelection = (chat: any) => {
-    // dispatch(setSelectedChat(chat));
-    setChats((prevChats: any) => {
-      return prevChats.map((prevChat: any) => {
-        if (prevChat.id === chat.id) {
-          return { ...prevChat, isSelected: true };
-        } else {
-          return { ...prevChat, isSelected: false };
-        }
-      });
-    });
+    dispatch(setSelectedChat(chat));
   };
   console.log(chats, "chats!");
   useEffect(() => {
@@ -70,8 +68,9 @@ function Main() {
         })
       );
     } else if (message.status === "JOIN") {
-      const joineeNumber = message?.fromNumber;
-      dispatch(joinChat(joineeNumber));
+      delete message.status;
+      const chat = message;
+      dispatch(joinChat(chat));
       toast({
         title: message?.messageText,
       });
@@ -100,6 +99,28 @@ function Main() {
   //   });
   // };
 
+  const fetchSelectedChatMessages = (userIds: Number[]) => {
+    axiosInstance
+      .request({
+        method: "GET",
+        url: `/v1/users/messages`,
+        params: {
+          userId1: userIds[0],
+          userId2: userIds[1],
+        },
+      })
+      .then((response) => {
+        setSelectedChatMessages(response?.data?.data);
+      })
+      .catch((error) => {
+        console.log(error, "error!");
+        toast({
+          title: error?.response?.data?.message || "Fetching messages failed!",
+          description: `Please try again later.`,
+          variant: "destructive",
+        });
+      });
+  };
   const connectToSocket = async () => {
     dispatch(setConnectionStatus("connecting"));
     // let username = signupData?.name.trim();
@@ -121,6 +142,17 @@ function Main() {
   useEffect(() => {
     connectToSocket();
   }, []);
+
+  useEffect(() => {
+    const selectedChat = chatsFromGlobalState?.find((chat: ChatInterface) => {
+      return chat.selected === true;
+    });
+    console.log(selectedChat, "selected chat!")
+    console.log(user, "user!")
+    if(selectedChat && user?.id && selectedChat?.id) {
+      fetchSelectedChatMessages([user?.id, selectedChat?.id]);
+    }
+  }, [chatsFromGlobalState]);
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
@@ -128,14 +160,18 @@ function Main() {
           <div className="flex justify-center items-center h-[10%] bg-gray-100">
             <p className="logo">Chat Connect</p>
           </div>
-          <ChatList chats={chatsFromGlobalState} handleChatSelection={handleChatSelection} />
+          <ChatList
+            chats={chatsFromGlobalState}
+            handleChatSelection={handleChatSelection}
+          />
         </Sidebar>
         <ResizableHandle />
         <ChatRoom>
           <ChatWindow
-            selectedChat={chats?.find((chat) => {
-              return chat.isSelected === true;
+            selectedChat={chatsFromGlobalState?.find((chat: ChatInterface) => {
+              return chat.selected === true;
             })}
+            selectedChatMessages={selectedChatMessages} // selectedChatMessages
           />
         </ChatRoom>
       </ResizablePanelGroup>

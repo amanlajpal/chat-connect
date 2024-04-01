@@ -9,8 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/common/card";
+import { Chat as ChatInterface } from "@/interfaces/Chat";
 
-function Chat(props: any) {
+export function TypographyH4({ text }: { text: string }) {
+  return (
+    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">{text}</h4>
+  );
+}
+
+function Chat(props: {
+  chat: ChatInterface;
+  handleChatSelection: (chat: ChatInterface) => void;
+}) {
   const { chat, handleChatSelection } = props;
 
   const handleClick = () => {
@@ -40,7 +50,7 @@ function Chat(props: any) {
           </AvatarFallback>
         </Avatar>
         <CardHeader className="py-3">
-          <CardTitle>{chat?.name}</CardTitle>
+          <TypographyH4 text={chat?.name || ""} />
           {chat?.lastMessage ? (
             <CardDescription>{chat?.lastMessage}</CardDescription>
           ) : (

@@ -73,18 +73,19 @@ function ChatWindow({selectedChat, selectedChatMessages}) {
   //     console.log(error, "error - chat window!");
   //   }
   // }, [connectionStatus, dispatch, username]);
+  console.log(selectedChat, "selected chat!");
   return (
     <section className="h-full">
       {selectedChat ? (
         <>
           <header className="flex items-center h-[10%] border-b border-inherit">
             <Avatar className="ml-8">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={selectedChat?.profilePhoto} />
               <AvatarFallback>
-                {selectedChat?.first_name?.slice(0, 2)?.toUpperCase() || "DP"}
+                {selectedChat?.name?.slice(0, 2)?.toUpperCase() || "DP"}
               </AvatarFallback>
             </Avatar>
-            <h2 className="mx-4">{selectedChat?.first_name + " " + selectedChat?.last_name}</h2>
+            <h2 className="mx-4">{selectedChat?.name}</h2>
           </header>
           <div
             className="
@@ -95,7 +96,10 @@ function ChatWindow({selectedChat, selectedChatMessages}) {
         relative
         "
           >
-            <MessageArea messages={selectedChatMessages} receiver={selectedChat?.first_name}/>
+            <MessageArea
+              messages={selectedChatMessages}
+              receiver={selectedChat?.name}
+            />
             <ChatInput />
           </div>
         </>

@@ -4,8 +4,9 @@ import axiosInstance from "@/connections/axiosInstance";
 import { setSelectedChat } from "@/store/chatsSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Chat as ChatInterface } from "@/interfaces/Chat";
 
-function ChatList({ chats, handleChatSelection }) {
+function ChatList({ chats, handleChatSelection }: { chats: ChatInterface[], handleChatSelection: (chat: ChatInterface) => void }) {
   // const [chats, setChats] = useState([]);
   // // const chatsFromGlobalState = useSelector((state: any) => {
   // //   return state?.chats?.value?.filter(
@@ -54,7 +55,7 @@ function ChatList({ chats, handleChatSelection }) {
     <>
       <div className="h-full">
         {chats?.length ? (
-          chats.map((chat: any, index: number) => (
+          chats.map((chat: ChatInterface, index: number) => (
             <Chat
               chat={chat}
               key={index}

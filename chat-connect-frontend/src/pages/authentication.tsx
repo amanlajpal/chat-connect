@@ -20,7 +20,7 @@ import { setUser } from "@/store/userSlice";
 import { joinChat } from "@/store/chatsSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initializeStompClient } from "@/connections/stompClient";
 import axiosInstance from "@/connections/axiosInstance";
 import { useToast } from "@/components/ui/common/use-toast";
@@ -65,7 +65,7 @@ export function Authentication() {
             phoneNumber: response?.data?.data?.phone,
           })
         );
-        redirect("/home")
+        navigate("/home")
       })
       .catch((error) => {
         console.log(error, "error!");

@@ -1,13 +1,6 @@
+import { Chat } from "@/interfaces/Chat";
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface Chat {
-  selected?: boolean;
-  lastMessage?: string;
-  lastMessageTime?: string;
-  name?: string;
-  phoneNumber: string;
-  profilePhoto?: string;
-}
 const chatsSlice = createSlice({
   name: "chats",
   initialState: {
@@ -15,7 +8,7 @@ const chatsSlice = createSlice({
   },
   reducers: {
     joinChat: (state, action) => {
-      const { lastMessage, lastMessageTime, name, profilePhoto, phoneNumber } =
+      const { lastMessage, lastMessageTime, name, profilePhoto, phoneNumber, id } =
         action?.payload;
       state.value.push({
         lastMessage,
@@ -23,6 +16,7 @@ const chatsSlice = createSlice({
         name,
         profilePhoto,
         phoneNumber,
+        id,
         selected: false,
       });
     },
@@ -37,10 +31,10 @@ const chatsSlice = createSlice({
     },
     setSelectedChat: (state, action) => {
       state.value = state.value.map((chat: any) => {
-        if (chat.sender === action?.payload?.sender) {
-          chat.isSelected = true;
+        if (chat?.phoneNumber === action?.payload?.phoneNumber) {
+          chat.selected = true;
         } else {
-          chat.isSelected = false;
+          chat.selected = false;
         }
         return chat;
       });
