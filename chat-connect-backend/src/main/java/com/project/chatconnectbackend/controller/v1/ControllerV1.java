@@ -94,7 +94,8 @@ public class ControllerV1 {
       newUser.setPhoneNumber(phone);
       newUser.setPassword(password);
       newUser.setProfilePhoto(avatarUrls[(int) (Math.random() * avatarUrls.length)]);
-      userRepository.save(newUser);
+      User createdUser = userRepository.save(newUser);
+      newUser.setId(createdUser.getId());
 
       // Create the response body
       Map<String, Object> responseBody = new HashMap<>();

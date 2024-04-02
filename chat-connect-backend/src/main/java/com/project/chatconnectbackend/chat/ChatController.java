@@ -7,9 +7,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.project.chatconnectbackend.model.Message;
 import com.project.chatconnectbackend.model.User;
-import com.project.chatconnectbackend.model.enumValues.MessageStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,19 +45,20 @@ public class ChatController {
     public Chat addUser(
             @Payload User user,
             SimpMessageHeaderAccessor headerAccessor) {
-        logger.info("User joined chat connect: " + user.getPhoneNumber());
+        logger.info("User joined chat connect: " + user.getId());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes != null) {
-            sessionAttributes.put("phoneNumber", user.getPhoneNumber());
+            sessionAttributes.put("userId", user.getId());
         }
         logger.info("User Joined Chat connect - header accessor - " + headerAccessor);
         Chat chat = new Chat();
-        chat.setPhoneNumber(user.getPhoneNumber());
+        chat.setId(user.getId());
         chat.setLastMessage(null);
         chat.setLastMessageTime(null);
         chat.setName(user.getFirstName() + " " + user.getLastName());
         chat.setProfilePhoto(user.getProfilePhoto());
-        chat.setId(user.getId());
+        chat.setPhoneNumber(user.getPhoneNumber());
+        chat.setStatus(ChatStatus.JOIN);
         return chat;
     }
 }
