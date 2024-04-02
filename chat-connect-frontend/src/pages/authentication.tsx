@@ -57,6 +57,7 @@ export function Authentication() {
         }));
         dispatch(
           joinChat({
+            id: response?.data?.data?.id,
             lastMessage: null,
             lastMessageTime: null,
             name: response?.data?.data?.firstName + " " + response?.data?.data?.lastName,
@@ -95,7 +96,7 @@ export function Authentication() {
           id: response?.data?.data?.id,
           firstName: response?.data?.data?.firstName,
           lastName: response?.data?.data?.lastName,
-          phoneNumber: response?.data?.data?.phone,
+          phoneNumber: response?.data?.data?.phoneNumber,
           email: response?.data?.data?.email,
           profilePhoto: response?.data?.data?.profilePhoto,
           createdAt: response?.data?.data?.createdAt,

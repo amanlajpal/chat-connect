@@ -8,8 +8,15 @@ const chatsSlice = createSlice({
   },
   reducers: {
     joinChat: (state, action) => {
-      const { lastMessage, lastMessageTime, name, profilePhoto, phoneNumber, id } =
-        action?.payload;
+      const {
+        lastMessage,
+        lastMessageTime,
+        name,
+        profilePhoto,
+        phoneNumber,
+        id,
+      } = action?.payload;
+      if (state.value.find((chat: any) => chat?.id === id)) return; // Prevent duplicate chats
       state.value.push({
         lastMessage,
         lastMessageTime,
@@ -84,7 +91,7 @@ export const {
   addChatMessage,
   addChatMessageSentBySender,
   reset,
-  setFetchedChats
+  setFetchedChats,
 } = chatsSlice.actions;
 
 export default chatsSlice;

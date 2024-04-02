@@ -68,13 +68,14 @@ function Main() {
       const chat = message;
       dispatch(joinChat(chat));
       toast({
-        title: message?.messageText,
+        title: `${chat?.name} joined the chat!`,
       });
     } else if (message.status === "LEAVE") {
       const leaverNumber = message?.fromNumber;
+      const chat = message;
       dispatch(leaveChat(leaverNumber));
       toast({
-        title: message?.messageText,
+        title: `${chat?.name} left the chat!`,
       });
     }
   }
