@@ -5,7 +5,7 @@ let stompClient: any = null;
 const initializeStompClient = async () => {
   return new Promise((resolve, reject) => {
     try {
-      let socket = new SockJS(import.meta.env.VITE_REACT_APP_BASE_URL);
+      let socket = new SockJS(import.meta.env.VITE_REACT_APP_PUBLIC_SOCKET_ENDPOINT);
       console.log(socket, "socket");
       stompClient = Stomp.over(socket);
       // connect to the server

@@ -22,7 +22,6 @@ import {
 } from "@/store/chatsSlice";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 function Main() {
-  const [chats, setChats] = useState<ChatInterface[]>([]);
   const [selectedChatMessages, setSelectedChatMessages] = useState([]);
   const chatsFromGlobalState = useSelector((state: any) => {
     return state?.chats?.value;
@@ -33,7 +32,6 @@ function Main() {
   const handleChatSelection = (chat: any) => {
     dispatch(setSelectedChat(chat));
   };
-  console.log(chats, "chats!");
   useEffect(() => {
     axiosInstance
       .request({
@@ -41,10 +39,8 @@ function Main() {
         url: "/v1/allChats",
       })
       .then((response) => {
-        console.log(response, "response!");
         const chatsToSet = response?.data?.data;
         dispatch(setFetchedChats(chatsToSet));
-        setChats(chatsToSet);
       })
       .catch((error) => {
         console.log(error, "error!");
@@ -147,8 +143,6 @@ function Main() {
     const selectedChat = chatsFromGlobalState?.find((chat: ChatInterface) => {
       return chat.selected === true;
     });
-    console.log(selectedChat, "selected chat!")
-    console.log(user, "user!")
     if(selectedChat && user?.id && selectedChat?.id) {
       fetchSelectedChatMessages([user?.id, selectedChat?.id]);
     }

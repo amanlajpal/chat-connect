@@ -46,7 +46,6 @@ export function Authentication() {
         params: signupData,
       })
       .then((response) => {
-        console.log(response, "response!");
         dispatch(setUser({
           id: response?.data?.data?.id,
           firstName: response?.data?.data?.firstName,
@@ -92,7 +91,6 @@ export function Authentication() {
         params: loginData,
       })
       .then((response) => {
-        console.log(response, "response!");
         dispatch(setUser({
           id: response?.data?.data?.id,
           firstName: response?.data?.data?.firstName,

@@ -10,8 +10,16 @@ import { getStompClient } from "@/connections/stompClient";
 import { joinChat, leaveChat, addChatMessage } from "@/store/chatsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Chat as ChatInterface } from "@/interfaces/Chat";
+import Message from "@/interfaces/Message";
 
-function ChatWindow({selectedChat, selectedChatMessages}) {
+function ChatWindow({
+  selectedChat,
+  selectedChatMessages,
+}: {
+  selectedChat: ChatInterface;
+  selectedChatMessages: Message[];
+}) {
   // const selectedChat = useSelector((state: any) => {
   //   const selectedChat = state?.chats?.value?.find(
   //     (chat: any) => chat.isSelected === true
@@ -73,7 +81,6 @@ function ChatWindow({selectedChat, selectedChatMessages}) {
   //     console.log(error, "error - chat window!");
   //   }
   // }, [connectionStatus, dispatch, username]);
-  console.log(selectedChat, "selected chat!");
   return (
     <section className="h-full">
       {selectedChat ? (
