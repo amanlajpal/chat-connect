@@ -191,16 +191,21 @@ public class ControllerV1 {
       // Create the response body
       Integer[] userIdsForMessages = new Integer[] { Integer.parseInt(userId1), Integer.parseInt(userId2) };
       List<Map<String, Object>> foundConversations = conversationRepository
-          .findDirectConversationBetweenUsers("direct", userIdsForMessages);
+          .findDirectConversationBetweenUsers("direct", userIdsForMessages[0], userIdsForMessages[1]);
       Integer foundConversationId = foundConversations.size() > 0
           ? (Integer) ((Map<String, Object>) foundConversations.get(0)).get("conversation_id")
           : null;
       if (foundConversationId != null) {
-        List<Message> foundMessages = messageRepository.findMessagesByConversationId(foundConversationId);
+        List<Message> foundMessages = messageRepository.findMessagesByConversationId(foundConversationId);        
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("conversationId", foundConversationId);
+        responseBody.put("messages", foundMessages);
+        responseBody.put("fromUserId", userIdsForMessages[0]);
+        responseBody.put("toUserId", userIdsForMessages[1]);
         if (foundMessages.isEmpty()) {
-          return new Response().error(foundMessages, "No messages found between users", 422);
+          return new Response().success(responseBody, "No messages found between users");
         } else {
-          return new Response().success(foundMessages, "Messages fetched successfully!");
+          return new Response().success(responseBody, "Messages fetched successfully!");
         }
       } else {
         Conversation newConversation = new Conversation();
@@ -217,6 +222,11 @@ public class ControllerV1 {
           GroupMember createdGroupMember = groupMemberRepository.save(groupMember);
           createdGroupMembers.add(createdGroupMember);
         }
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("conversationId", createdConversation.getId());
+        responseBody.put("messages", new ArrayList<>());
+        responseBody.put("fromUserId", userIdsForMessages[0]);
+        responseBody.put("toUserId", userIdsForMessages[1]);
       }
       // Get messages between two users
       return new Response().success(foundConversationId, "Messages fetched successfully!");

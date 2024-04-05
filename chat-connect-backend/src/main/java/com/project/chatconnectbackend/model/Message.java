@@ -3,6 +3,7 @@ package com.project.chatconnectbackend.model;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 
 import com.project.chatconnectbackend.model.enumValues.MessageStatus;
 
@@ -30,7 +31,7 @@ import jakarta.persistence.ForeignKey;
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "message_text")

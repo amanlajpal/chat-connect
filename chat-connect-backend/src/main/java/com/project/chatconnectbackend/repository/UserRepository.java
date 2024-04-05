@@ -11,7 +11,5 @@ import java.util.List;
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    // @Query("SELECT u FROM User u WHERE u.phone_number = :phone AND u.password = :password")
-    // User findByPhoneAndPassword(@Param("phone") String phone, @Param("password") String password);
     User findByPhoneNumberAndPassword(String phoneNumber, String password);
 }

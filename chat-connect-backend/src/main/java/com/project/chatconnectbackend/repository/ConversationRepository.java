@@ -36,11 +36,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, Inte
                 ON (
                     sq.conversation_id = sq2.conversation_id
                         AND sq.conversation_name = :conversationName
-                        AND sq.user_id != sq2.user_id
-                        AND sq2.user_id IN :userIds
+                        AND sq.user_id <> sq2.user_id
+                        AND sq.user_id = :userId1 
+                        AND sq2.user_id = :userId2
                     );
                 """, nativeQuery = true)
 
     List<Map<String, Object>> findDirectConversationBetweenUsers(
-            @Param("conversationName") String conversationName, @Param("userIds") Integer[] userIds);
+            @Param("conversationName") String conversationName, @Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
 }
