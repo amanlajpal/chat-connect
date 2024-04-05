@@ -1,39 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../common/button";
 import { Textarea } from "../common/textarea";
 import { AiOutlineSend } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { getStompClient } from "@/connections/stompClient";
-import { addChatMessageSentBySender } from "@/store/chatsSlice";
+import { setMessage } from "@/store/conversationSlice";
+import Message, { MessageStatus } from "@/interfaces/Message";
 
 function ChatInput() {
   const [messageInput, setMessageInput] = useState("");
-  const stompClient = getStompClient();
-  const username = useSelector((state: any) => state?.username?.value);
-  const selectedChat = useSelector((state: any) => {
-    return state?.chats?.value?.find((chat: any) => chat.isSelected === true);
-  });
+  const user = useSelector((state: any) => state?.user?.value);
+  const conversation = useSelector((state: any) => state?.conversation?.value);
   const dispatch = useDispatch();
+  let stompClient = getStompClient();
   function sendMessage(messageInput: any) {
     var messageContent = messageInput.trim();
     if (messageContent && stompClient) {
-      var chatMessage = {
-        sender: username,
-        receiver: selectedChat?.sender,
-        content: messageContent,
-        type: "CHAT",
+      const message: Message = {
+        messageText: messageContent,
+        fromNumber: user?.phoneNumber,
+        status: MessageStatus.SENT,
+        conversationId: conversation?.id,
       };
       stompClient.send(
         "/app/chat.sendMessage",
         {},
-        JSON.stringify(chatMessage)
+        JSON.stringify(message)
       );
       dispatch(
-        addChatMessageSentBySender({
-          ...chatMessage,
-          sentAt: new Date().toLocaleTimeString(),
+        setMessage({
+          ...message,
         })
       );
+    }else{
+      console.log("Error sending message!");
     }
   }
   return (

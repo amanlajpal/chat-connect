@@ -46,38 +46,6 @@ const chatsSlice = createSlice({
         return chat;
       });
     },
-    addChatMessage: (state, action) => {
-      const foundChat = state.value.find(
-        (chat: any) => chat.sender === action?.payload?.sender
-      );
-      if (foundChat) {
-        foundChat.messages = [...(foundChat?.messages || []), action?.payload];
-      } else {
-        state.value = [
-          ...state.value,
-          {
-            sender: action?.payload?.sender,
-            messages: [action?.payload],
-          },
-        ];
-      }
-    },
-    addChatMessageSentBySender: (state, action) => {
-      const foundChat = state.value.find(
-        (chat: any) => chat.sender === action?.payload?.receiver
-      );
-      if (foundChat) {
-        foundChat.messages = [...(foundChat?.messages || []), action?.payload];
-      } else {
-        state.value = [
-          ...state.value,
-          {
-            sender: action?.payload?.receiver,
-            messages: [action?.payload],
-          },
-        ];
-      }
-    },
     reset: (state) => {
       state.value = [];
     },
@@ -88,8 +56,6 @@ export const {
   joinChat,
   leaveChat,
   setSelectedChat,
-  addChatMessage,
-  addChatMessageSentBySender,
   reset,
   setFetchedChats,
 } = chatsSlice.actions;

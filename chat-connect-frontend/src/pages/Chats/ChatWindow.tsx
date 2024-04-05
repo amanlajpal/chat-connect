@@ -5,13 +5,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/common/avatar";
-import { useToast } from "@/components/ui/common/use-toast";
-import { getStompClient } from "@/connections/stompClient";
-import { joinChat, leaveChat, addChatMessage } from "@/store/chatsSlice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 import Message from "@/interfaces/Message";
+import { ScrollArea } from "@/components/ui/common/scroll-area";
 
 function ChatWindow({
   selectedChat,
@@ -96,17 +92,16 @@ function ChatWindow({
           </header>
           <div
             className="
-        p-4 flex flex-col h-[90%] 
+        flex flex-col h-[90%] 
         gap-2 bg-repeat 
         bg-[url('./img/message-window-pattern.jpg')] 
         bg-[length:300px]
         relative
         "
           >
-            <MessageArea
-              messages={selectedChatMessages}
-              receiver={selectedChat?.name}
-            />
+            <ScrollArea className="h-full w-full p-4">
+              <MessageArea messages={selectedChatMessages || []} />
+            </ScrollArea>
             <ChatInput />
           </div>
         </>

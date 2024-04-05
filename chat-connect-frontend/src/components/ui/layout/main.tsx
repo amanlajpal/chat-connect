@@ -3,7 +3,7 @@ import { ResizableHandle, ResizablePanelGroup } from "../common/resizable";
 import Sidebar from "./sidebar";
 import ChatRoom from "./chatRoom";
 import ChatWindow from "@/pages/Chats/ChatWindow";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axiosInstance from "@/connections/axiosInstance";
 import { useToast } from "../common/use-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,18 +14,18 @@ import {
   initializeStompClient,
 } from "@/connections/stompClient";
 import {
-  addChatMessage,
   joinChat,
   leaveChat,
   setFetchedChats,
   setSelectedChat,
 } from "@/store/chatsSlice";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
+import { updateConversation, setMessage } from "@/store/conversationSlice";
 function Main() {
-  const [selectedChatMessages, setSelectedChatMessages] = useState([]);
   const chatsFromGlobalState = useSelector((state: any) => {
     return state?.chats?.value;
   });
+  const conversation = useSelector((state: any) => state?.conversation?.value);
   const user = useSelector((state: any) => state?.user?.value);
   const { toast } = useToast();
   const dispatch = useDispatch();
@@ -55,12 +55,11 @@ function Main() {
   function onMessageReceived(payload: any) {
     console.log(payload, "payload - on message received!");
     var message = JSON.parse(payload?.body);
-    if (message.status === "CHAT") {
+    if (message.status === "SENT") {
       console.log(message, "message - chat!");
       dispatch(
-        addChatMessage({
+        setMessage({
           ...message,
-          sentAt: new Date(message?.sentAt).toLocaleTimeString(),
         })
       );
     } else if (message.status === "JOIN") {
@@ -79,22 +78,6 @@ function Main() {
       });
     }
   }
-  // const onMessageReceived = (payload: any) => {
-  //   const message = JSON.parse(payload?.body);
-  //   console.log(message, "message!");
-  //   setChats((prevChats: any) => {
-  //     return prevChats.map((prevChat: any) => {
-  //       if (prevChat.id === message.chatId) {
-  //         return {
-  //           ...prevChat,
-  //           messages: [...prevChat.messages, message],
-  //         };
-  //       } else {
-  //         return prevChat;
-  //       }
-  //     });
-  //   });
-  // };
 
   const fetchSelectedChatMessages = (userIds: Number[]) => {
     axiosInstance
@@ -107,7 +90,19 @@ function Main() {
         },
       })
       .then((response) => {
-        setSelectedChatMessages(response?.data?.data);
+        const conversationId = response?.data?.data?.conversationId;
+        const messages = response?.data?.data?.messages?.map((message: any) => {
+          delete message?.conversationId;
+          return {
+            ...message,
+          };
+        });
+        dispatch(
+          updateConversation({
+            id: conversationId,
+            messages: messages,
+          })
+        );
       })
       .catch((error) => {
         console.log(error, "error!");
@@ -118,7 +113,10 @@ function Main() {
         });
       });
   };
-  const connectToSocket = async () => {
+  const connectToSocket = useCallback(async () => {
+    // If already connected, return early
+    if (getStompClient()?.connected) return;
+
     dispatch(setConnectionStatus("connecting"));
     // let username = signupData?.name.trim();
     // dispatch(setUsername(username));
@@ -134,9 +132,10 @@ function Main() {
       );
       console.log(initializedSocket, "initialized socket!");
     }
-  };
+  }, []);
 
   useEffect(() => {
+    console.log("connecting to socket!")
     connectToSocket();
   }, []);
 
@@ -166,7 +165,7 @@ function Main() {
             selectedChat={chatsFromGlobalState?.find((chat: ChatInterface) => {
               return chat.selected === true;
             })}
-            selectedChatMessages={selectedChatMessages} // selectedChatMessages
+            selectedChatMessages={conversation?.messages} // selectedChatMessages
           />
         </ChatRoom>
       </ResizablePanelGroup>

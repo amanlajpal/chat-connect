@@ -1,31 +1,37 @@
+import { useSelector } from "react-redux";
 import Message from "./message";
+import MessageInterface from "@/interfaces/Message";
 
 function MessageArea(props: any) {
-  const { messages, receiver } = props;
+  const { messages } = props;
+
+  const user = useSelector((state: any) => state?.user?.value);
 
   return (
     <>
-      <div className="flex justify-start">
-        <Message message="Hello, how are you?" time="12:00 PM" />
-      </div>
-      <div className="flex justify-end">
-        <Message message="Hello, how are you?" time="12:00 PM" />
-      </div>
-      {messages?.map((message: any, index: number) => {
-        if (message?.sender === receiver) {
+      {messages?.map((message: MessageInterface, index: number) => {
+        if (message?.fromNumber === user?.phoneNumber) {
           return (
-            <div key={index} className="flex justify-start">
-              <Message message={message?.content} time={message?.sentAt} />
+            <div key={index} className="flex justify-end mb-1">
+              <Message
+                messageText={message?.messageText}
+                time={message?.sentAt || "Now"}
+              />
             </div>
           );
         } else {
           return (
-            <div key={index} className="flex justify-end">
-              <Message message={message?.content} time={message?.sentAt} />
+            <div key={index} className="flex justify-start mb-1">
+              <Message
+                messageText={message?.messageText}
+                time={message?.sentAt || "Now"}
+              />
             </div>
           );
         }
       })}
+      {/* Add a margin block to the bottom of the message area */}
+      <div style={{ marginBlock: "100px" }}></div>
     </>
   );
 }

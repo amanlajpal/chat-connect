@@ -15,13 +15,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/common/tabs";
-import { setConnectionStatus } from "@/store/connectionStatusSlice";
 import { setUser } from "@/store/userSlice";
 import { joinChat } from "@/store/chatsSlice";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { initializeStompClient } from "@/connections/stompClient";
 import axiosInstance from "@/connections/axiosInstance";
 import { useToast } from "@/components/ui/common/use-toast";
 
@@ -75,14 +73,6 @@ export function Authentication() {
           variant: "destructive",
         });
       });
-    // dispatch(setConnectionStatus("connecting"));
-    // let username = signupData?.name.trim();
-    // dispatch(setUser(username));
-    // if (username) {
-    //   const initializedClient = await initializeStompClient(username);
-    //   console.log(initializedClient, "initialized client!");
-    //   dispatch(setConnectionStatus("connected"));
-    // }
   };
   const handleLogin = async () => {
     axiosInstance
