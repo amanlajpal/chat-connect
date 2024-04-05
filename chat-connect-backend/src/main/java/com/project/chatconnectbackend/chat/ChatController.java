@@ -75,7 +75,7 @@ public class ChatController {
     public Chat addUser(
             @Payload User user,
             SimpMessageHeaderAccessor headerAccessor) {
-        logger.info("User joined chat connect: " + user.getId());
+        logger.info("User joined chat connect: " + user.getId() + " " + user.getFirstName() + " " + user.getLastName());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes != null) {
             sessionAttributes.put("userId", user.getId());
