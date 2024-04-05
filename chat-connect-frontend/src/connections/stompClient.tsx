@@ -22,8 +22,15 @@ const initializeStompClient = async () => {
   });
 };
 
+const disconnectStompClient = () => {
+  if (stompClient) {
+    stompClient.disconnect();
+    stompClient = null;
+  }
+};
+
 const getStompClient = () => {
   return stompClient;
 };
 
-export { initializeStompClient, getStompClient };
+export { initializeStompClient, getStompClient, disconnectStompClient };

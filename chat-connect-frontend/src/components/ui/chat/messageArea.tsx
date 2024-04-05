@@ -16,6 +16,7 @@ function MessageArea(props: any) {
               <Message
                 messageText={message?.messageText}
                 time={message?.sentAt || "Now"}
+                status={message?.status}
               />
             </div>
           );
@@ -25,6 +26,7 @@ function MessageArea(props: any) {
               <Message
                 messageText={message?.messageText}
                 time={message?.sentAt || "Now"}
+                status={message?.status}
               />
             </div>
           );

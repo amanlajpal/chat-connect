@@ -18,7 +18,7 @@ const initialState = {
     {
       messageText: "How are you?",
       fromNumber: "9354388817",
-      status: "SENT",
+      status: "DELIVERED",
       conversationId: 1,
     },
     {
@@ -30,7 +30,7 @@ const initialState = {
     {
       messageText: "How about you?",
       fromNumber: "8766228432",
-      status: "SENT",
+      status: "DELIVERED",
       conversationId: 1,
     },
     {

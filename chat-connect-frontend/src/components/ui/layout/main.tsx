@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setConnectionStatus } from "@/store/connectionStatusSlice";
 // import { setUsername } from "@/store/usernameSlice";
 import {
+  disconnectStompClient,
   getStompClient,
   initializeStompClient,
 } from "@/connections/stompClient";
@@ -57,11 +58,15 @@ function Main() {
     var message = JSON.parse(payload?.body);
     if (message.status === "SENT") {
       console.log(message, "message - chat!");
-      dispatch(
-        setMessage({
-          ...message,
-        })
-      );
+      if (message?.fromNumber === user?.phoneNumber) {
+        message.status = "DELIVERED";
+      }else{
+        dispatch(
+          setMessage({
+            ...message,
+          })
+        );
+      }
     } else if (message.status === "JOIN") {
       delete message.status;
       const chat = message;
@@ -113,7 +118,7 @@ function Main() {
         });
       });
   };
-  const connectToSocket = useCallback(async () => {
+  const connectToStompClient = useCallback(async () => {
     // If already connected, return early
     if (getStompClient()?.connected) return;
 
@@ -136,7 +141,8 @@ function Main() {
 
   useEffect(() => {
     console.log("connecting to socket!")
-    connectToSocket();
+    connectToStompClient();
+    // return disconnectStompClient()
   }, []);
 
   useEffect(() => {
