@@ -1,13 +1,22 @@
 // Code: Main App component
-import './App.css'
-import { Authentication } from '@/components/ui/authentication'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Authentication } from "@/pages/authentication";
+import "./App.css";
+import Home from "./pages/home";
+import { Toaster } from "./components/ui/common/toaster";
 
 function App() {
   return (
     <>
-      <Authentication />
+      <Toaster />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Authentication />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
