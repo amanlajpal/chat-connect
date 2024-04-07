@@ -26,6 +26,9 @@ function Main() {
   const chatsFromGlobalState = useSelector((state: any) => {
     return state?.chats?.value;
   });
+  const connectionStatus = useSelector(
+    (state: any) => state?.connectionStatus?.value
+  );
   const conversation = useSelector((state: any) => state?.conversation?.value);
   const user = useSelector((state: any) => state?.user?.value);
   const { toast } = useToast();
@@ -60,7 +63,7 @@ function Main() {
       console.log(message, "message - chat!");
       if (message?.fromNumber === user?.phoneNumber) {
         message.status = "DELIVERED";
-      }else{
+      } else {
         dispatch(
           setMessage({
             ...message,
@@ -140,16 +143,21 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    console.log("connecting to socket!")
-    connectToStompClient();
-    // return disconnectStompClient()
-  }, []);
+    if (connectionStatus === "disconnected") {
+      connectToStompClient();
+    }
+    return () => {
+      if (connectionStatus === "connected") {
+        disconnectStompClient();
+      }
+    };
+  }, [connectionStatus]);
 
   useEffect(() => {
     const selectedChat = chatsFromGlobalState?.find((chat: ChatInterface) => {
       return chat.selected === true;
     });
-    if(selectedChat && user?.id && selectedChat?.id) {
+    if (selectedChat && user?.id && selectedChat?.id) {
       fetchSelectedChatMessages([user?.id, selectedChat?.id]);
     }
   }, [chatsFromGlobalState]);
