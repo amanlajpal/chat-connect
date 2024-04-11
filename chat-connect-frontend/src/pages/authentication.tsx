@@ -26,11 +26,11 @@ import { useToast } from "@/components/ui/common/use-toast";
 export function Authentication() {
   const [signupData, setSignupData] = useState({
     name: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
   });
   const [loginData, setLoginData] = useState({
-    phone: "",
+    phoneNumber: "",
     password: "",
   });
   const { toast } = useToast();
@@ -38,32 +38,33 @@ export function Authentication() {
   const navigate = useNavigate();
   const handleSubmit = async () => {
     axiosInstance
-      .request({
-        method: "POST",
-        url: "/v1/register",
-        params: signupData,
-      })
+      .post("/v1/auth/register", signupData)
       .then((response) => {
-        dispatch(setUser({
-          id: response?.data?.data?.id,
-          firstName: response?.data?.data?.firstName,
-          lastName: response?.data?.data?.lastName,
-          phoneNumber: response?.data?.data?.phone,
-          email: response?.data?.data?.email,
-          profilePhoto: response?.data?.data?.profilePhoto,
-          createdAt: response?.data?.data?.createdAt,
-        }));
+        dispatch(
+          setUser({
+            id: response?.data?.data?.id,
+            firstName: response?.data?.data?.firstName,
+            lastName: response?.data?.data?.lastName,
+            phoneNumber: response?.data?.data?.phone,
+            email: response?.data?.data?.email,
+            profilePhoto: response?.data?.data?.profilePhoto,
+            createdAt: response?.data?.data?.createdAt,
+          })
+        );
         dispatch(
           joinChat({
             id: response?.data?.data?.id,
             lastMessage: null,
             lastMessageTime: null,
-            name: response?.data?.data?.firstName + " " + response?.data?.data?.lastName,
+            name:
+              response?.data?.data?.firstName +
+              " " +
+              response?.data?.data?.lastName,
             profilePhoto: response?.data?.data?.profilePhoto,
             phoneNumber: response?.data?.data?.phone,
           })
         );
-        navigate("/home")
+        navigate("/home");
       })
       .catch((error) => {
         console.log(error, "error!");
@@ -76,21 +77,19 @@ export function Authentication() {
   };
   const handleLogin = async () => {
     axiosInstance
-      .request({
-        method: "POST",
-        url: "/v1/login",
-        params: loginData,
-      })
+      .post("/v1/auth/login", loginData)
       .then((response) => {
-        dispatch(setUser({
-          id: response?.data?.data?.id,
-          firstName: response?.data?.data?.firstName,
-          lastName: response?.data?.data?.lastName,
-          phoneNumber: response?.data?.data?.phoneNumber,
-          email: response?.data?.data?.email,
-          profilePhoto: response?.data?.data?.profilePhoto,
-          createdAt: response?.data?.data?.createdAt,
-        }));
+        dispatch(
+          setUser({
+            id: response?.data?.data?.id,
+            firstName: response?.data?.data?.firstName,
+            lastName: response?.data?.data?.lastName,
+            phoneNumber: response?.data?.data?.phoneNumber,
+            email: response?.data?.data?.email,
+            profilePhoto: response?.data?.data?.profilePhoto,
+            createdAt: response?.data?.data?.createdAt,
+          })
+        );
         // dispatch(
         //   joinChat({
         //     lastMessage: null,
@@ -100,7 +99,7 @@ export function Authentication() {
         //     phoneNumber: response?.data?.data?.phone,
         //   })
         // );
-        navigate("/home")
+        navigate("/home");
         toast({
           title: response?.data?.message || "Login Successfull!",
         });
@@ -134,10 +133,13 @@ export function Authentication() {
                 <Label htmlFor="phone">Phone</Label>
                 <Input
                   id="phone"
-                  value={loginData?.phone || ""}
+                  value={loginData?.phoneNumber || ""}
                   onChange={(event) =>
                     setLoginData((prevLoginData) => {
-                      return { ...prevLoginData, phone: event?.target?.value };
+                      return {
+                        ...prevLoginData,
+                        phoneNumber: event?.target?.value,
+                      };
                     })
                   }
                 />
@@ -160,9 +162,7 @@ export function Authentication() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleLogin}>
-                Login
-              </Button>
+              <Button onClick={handleLogin}>Login</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -191,10 +191,13 @@ export function Authentication() {
                 <Label htmlFor="phone">Phone</Label>
                 <Input
                   id="phone"
-                  value={signupData?.phone || ""}
+                  value={signupData?.phoneNumber || ""}
                   onChange={(event) =>
                     setSignupData((prevSignupData) => {
-                      return { ...prevSignupData, phone: event?.target?.value };
+                      return {
+                        ...prevSignupData,
+                        phoneNumber: event?.target?.value,
+                      };
                     })
                   }
                 />
@@ -217,9 +220,7 @@ export function Authentication() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSubmit}>
-                Signup
-              </Button>
+              <Button onClick={handleSubmit}>Signup</Button>
             </CardFooter>
           </Card>
         </TabsContent>
