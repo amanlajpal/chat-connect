@@ -8,15 +8,3 @@ spring:
     username: root
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-#   jpa:
-#     show-sql: true
-
-# # Set logging level for Hibernate to DEBUG
-# logging:
-#   level:
-#     org.hibernate: DEBUG
-
-# # Set logging level for Spring Data JPA to DEBUG
-# logging:
-#   level:
-#     org.springframework.data.jpa: DEBUG
