@@ -10,9 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +33,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
         )throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+        final String jwtExtractedFromCookie = jwtCookie != null ? jwtCookie.getValue() : null;
         final String jwt;
         final String phoneNumber;
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (jwtExtractedFromCookie == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        jwt = authorizationHeader.substring(7);
+        jwt = jwtExtractedFromCookie;
         phoneNumber = jwtService.extractUsername(jwt);
         if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             final UserDetails userDetails = this.userDetailsService.loadUserByUsername(phoneNumber);

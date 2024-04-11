@@ -12,6 +12,8 @@ import com.project.chatconnectbackend.dto.RegisterRequest;
 import com.project.chatconnectbackend.model.User;
 import com.project.chatconnectbackend.repository.UserRepository;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -78,7 +80,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -89,6 +91,13 @@ public class AuthenticationService {
                     .orElseThrow();
 
             var jwt = jwtService.generateToken(user);
+
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setDomain("localhost");
+            cookie.setPath("/");
+            cookie.setSecure(false);
+            response.addCookie(cookie);
 
             return AuthenticationResponse
                     .builder()
