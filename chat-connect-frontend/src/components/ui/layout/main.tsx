@@ -3,12 +3,12 @@ import { ResizableHandle, ResizablePanelGroup } from "../common/resizable";
 import Sidebar from "./sidebar";
 import ChatRoom from "./chatRoom";
 import ChatWindow from "@/pages/Chats/ChatWindow";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import axiosInstance from "@/connections/axiosInstance";
 import { useToast } from "../common/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setConnectionStatus } from "@/store/connectionStatusSlice";
-// import { setUsername } from "@/store/usernameSlice";
+import { CiLogout } from "react-icons/ci";
 import {
   disconnectStompClient,
   getStompClient,
@@ -22,6 +22,8 @@ import {
 } from "@/store/chatsSlice";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 import { updateConversation, setMessage } from "@/store/conversationSlice";
+import { Button } from "../common/button";
+import { useNavigate } from "react-router-dom";
 function Main() {
   const chatsFromGlobalState = useSelector((state: any) => {
     return state?.chats?.value;
@@ -33,6 +35,7 @@ function Main() {
   const user = useSelector((state: any) => state?.user?.value);
   const { toast } = useToast();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChatSelection = (chat: any) => {
     dispatch(setSelectedChat(chat));
   };
@@ -166,6 +169,20 @@ function Main() {
       <ResizablePanelGroup direction="horizontal">
         <Sidebar>
           <div className="flex justify-center items-center h-[10%] bg-gray-100">
+            <div className="absolute left-4">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  axiosInstance.post("/v1/logout").then(() => {
+                    navigate("/");
+                    window.location.reload();
+                  });
+                }}
+              >
+                <CiLogout className="h-4 w-4" />
+              </Button>
+            </div>
             <p className="logo">Chat Connect</p>
           </div>
           <ChatList

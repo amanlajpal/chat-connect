@@ -4,6 +4,7 @@ import usernameSlice from "./usernameSlice";
 import chatsSlice from "./chatsSlice";
 import userSlice from "./userSlice";
 import conversationSlice from "./conversationSlice";
+import authenticationSlice from "./authenticationSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     username: usernameSlice.reducer,
     user: userSlice.reducer,
     conversation: conversationSlice.reducer,
+    authentication: authenticationSlice.reducer,
   },
 });
 

@@ -40,28 +40,32 @@ export function Authentication() {
     axiosInstance
       .post("/v1/auth/register", signupData)
       .then((response) => {
+        toast({
+          title: response?.data?.message || "Registered Successfull!",
+        });
+        const userRegistered = response?.data?.data;
         dispatch(
           setUser({
-            id: response?.data?.data?.id,
-            firstName: response?.data?.data?.firstName,
-            lastName: response?.data?.data?.lastName,
-            phoneNumber: response?.data?.data?.phone,
-            email: response?.data?.data?.email,
-            profilePhoto: response?.data?.data?.profilePhoto,
-            createdAt: response?.data?.data?.createdAt,
+            id: userRegistered?.id,
+            firstName: userRegistered?.firstName,
+            lastName: userRegistered?.lastName,
+            phoneNumber: userRegistered?.phoneNumber,
+            email: userRegistered?.email,
+            profilePhoto: userRegistered?.profilePhoto,
+            createdAt: userRegistered?.createdAt,
           })
         );
         dispatch(
           joinChat({
-            id: response?.data?.data?.id,
+            id: userRegistered?.id,
             lastMessage: null,
             lastMessageTime: null,
             name:
-              response?.data?.data?.firstName +
+              userRegistered?.firstName +
               " " +
-              response?.data?.data?.lastName,
-            profilePhoto: response?.data?.data?.profilePhoto,
-            phoneNumber: response?.data?.data?.phone,
+              userRegistered?.lastName,
+            profilePhoto: userRegistered?.profilePhoto,
+            phoneNumber: userRegistered?.phoneNumber,
           })
         );
         navigate("/home");
