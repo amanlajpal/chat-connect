@@ -46,7 +46,11 @@ function Main() {
         url: "/v1/allChats",
       })
       .then((response) => {
-        const chatsToSet = response?.data?.data;
+        let chatsToSet = response?.data?.data;
+        console.log(chatsToSet, "chats to set!");
+        chatsToSet = chatsToSet.filter((chat: any) => {
+          return chat.id !== user.id;
+        });
         dispatch(setFetchedChats(chatsToSet));
       })
       .catch((error) => {

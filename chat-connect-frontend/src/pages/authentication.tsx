@@ -55,19 +55,6 @@ export function Authentication() {
             createdAt: userRegistered?.createdAt,
           })
         );
-        dispatch(
-          joinChat({
-            id: userRegistered?.id,
-            lastMessage: null,
-            lastMessageTime: null,
-            name:
-              userRegistered?.firstName +
-              " " +
-              userRegistered?.lastName,
-            profilePhoto: userRegistered?.profilePhoto,
-            phoneNumber: userRegistered?.phoneNumber,
-          })
-        );
         navigate("/home");
       })
       .catch((error) => {
@@ -94,15 +81,6 @@ export function Authentication() {
             createdAt: response?.data?.data?.createdAt,
           })
         );
-        // dispatch(
-        //   joinChat({
-        //     lastMessage: null,
-        //     lastMessageTime: null,
-        //     name: response?.data?.data?.firstName + " " + response?.data?.data?.lastName,
-        //     profilePhoto: response?.data?.data?.profilePhoto,
-        //     phoneNumber: response?.data?.data?.phone,
-        //   })
-        // );
         navigate("/home");
         toast({
           title: response?.data?.message || "Login Successfull!",
