@@ -1,9 +1,13 @@
 package com.project.chatconnectbackend.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import com.project.chatconnectbackend.config.JwtService;
 import com.project.chatconnectbackend.dto.AuthenticationRequest;
@@ -13,6 +17,7 @@ import com.project.chatconnectbackend.model.User;
 import com.project.chatconnectbackend.repository.UserRepository;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +30,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         try {
             // @ResponseBody means the returned String is the response, not a view name
             // @RequestParam means it is a parameter from the GET or POST request
@@ -66,6 +71,13 @@ public class AuthenticationService {
             newUser.setId(createdUser.getId());
 
             var jwt = jwtService.generateToken(newUser);
+
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setDomain("localhost");
+            cookie.setPath("/");
+            cookie.setSecure(false);
+            response.addCookie(cookie);
 
             return AuthenticationResponse
                     .builder()
@@ -110,6 +122,48 @@ public class AuthenticationService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // Clear JWT cookie
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setDomain("localhost");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("status", "success");
+            responseMap.put("message", "Logged out successfully!");
+            return responseMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Map<String, Object> getUserFromToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+            if (jwtCookie == null) {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("status", "error");
+                responseMap.put("message", "No user logged in!");
+                return responseMap;
+            } else {
+                User user = userRepository.findByPhoneNumber(jwtService.extractUsername(jwtCookie.getValue()))
+                        .orElseThrow();
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("status", "success");
+                responseMap.put("data", user);
+                responseMap.put("message", "Logged out successfully!");
+                return responseMap;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

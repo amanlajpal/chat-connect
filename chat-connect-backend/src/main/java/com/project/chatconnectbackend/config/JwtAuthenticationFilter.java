@@ -2,6 +2,7 @@ package com.project.chatconnectbackend.config;
 
 import java.io.IOException;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
         )throws ServletException, IOException {
+        if(request.getRequestURI().startsWith("/api/v1/auth") || request.getRequestURI().startsWith("/api/v1/socket") || request.getRequestURI().startsWith("/api/v1/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
         final String jwtExtractedFromCookie = jwtCookie != null ? jwtCookie.getValue() : null;
         final String jwt;

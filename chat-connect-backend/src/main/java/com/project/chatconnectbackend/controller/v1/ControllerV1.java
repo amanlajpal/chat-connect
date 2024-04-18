@@ -36,6 +36,7 @@ import com.project.chatconnectbackend.repository.UserRepository;
 import com.project.chatconnectbackend.service.AuthenticationService;
 import com.project.chatconnectbackend.utility.Response;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -66,9 +67,9 @@ public class ControllerV1 {
 
   @PostMapping(path = "/auth/register", produces = "application/json") // Map ONLY POST Requests
   public @ResponseBody ResponseEntity<AuthenticationResponse> registerNewUser(
-      @RequestBody RegisterRequest request) {
+      @RequestBody RegisterRequest request, HttpServletResponse response) {
     try {
-      return ResponseEntity.ok(service.register(request));
+      return ResponseEntity.ok(service.register(request, response));
     } finally {
       System.out.println("User saved");
     }
@@ -81,6 +82,28 @@ public class ControllerV1 {
       return ResponseEntity.ok(service.authenticate(request, response));
     } finally {
       System.out.println("User logged in");
+    }
+  }
+
+  @GetMapping(path = "/getUserFromToken", produces = "application/json") // Map ONLY POST Requests
+  public @ResponseBody ResponseEntity<?> getUserFromToken(
+    HttpServletRequest request, HttpServletResponse response) {
+    try {
+      Object responseObj = service.getUserFromToken(request, response);
+      System.out.println(responseObj);
+      return ResponseEntity.ok(responseObj);
+    } finally {
+      System.out.println("getUserFromToken called!");
+    }
+  }
+
+  @PostMapping(path = "/logout", produces = "application/json") // Map ONLY POST Requests
+  public @ResponseBody ResponseEntity<?> logoutUser(
+    HttpServletRequest request, HttpServletResponse response) {
+    try {
+      return ResponseEntity.ok(service.logout(request, response));
+    } finally {
+      System.out.println("User logged out!");
     }
   }
 
