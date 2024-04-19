@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json", // Set the default content type
   },
-//   withCredentials: true, // Send cookies when making cross-origin requests
+  withCredentials: true, // Send cookies when making cross-origin requests
 });
 
 export default axiosInstance;

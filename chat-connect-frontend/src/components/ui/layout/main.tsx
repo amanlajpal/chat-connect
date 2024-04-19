@@ -3,12 +3,12 @@ import { ResizableHandle, ResizablePanelGroup } from "../common/resizable";
 import Sidebar from "./sidebar";
 import ChatRoom from "./chatRoom";
 import ChatWindow from "@/pages/Chats/ChatWindow";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import axiosInstance from "@/connections/axiosInstance";
 import { useToast } from "../common/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setConnectionStatus } from "@/store/connectionStatusSlice";
-// import { setUsername } from "@/store/usernameSlice";
+import { CiLogout } from "react-icons/ci";
 import {
   disconnectStompClient,
   getStompClient,
@@ -22,14 +22,20 @@ import {
 } from "@/store/chatsSlice";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 import { updateConversation, setMessage } from "@/store/conversationSlice";
+import { Button } from "../common/button";
+import { useNavigate } from "react-router-dom";
 function Main() {
   const chatsFromGlobalState = useSelector((state: any) => {
     return state?.chats?.value;
   });
+  const connectionStatus = useSelector(
+    (state: any) => state?.connectionStatus?.value
+  );
   const conversation = useSelector((state: any) => state?.conversation?.value);
   const user = useSelector((state: any) => state?.user?.value);
   const { toast } = useToast();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChatSelection = (chat: any) => {
     dispatch(setSelectedChat(chat));
   };
@@ -40,7 +46,11 @@ function Main() {
         url: "/v1/allChats",
       })
       .then((response) => {
-        const chatsToSet = response?.data?.data;
+        let chatsToSet = response?.data?.data;
+        console.log(chatsToSet, "chats to set!");
+        chatsToSet = chatsToSet.filter((chat: any) => {
+          return chat.id !== user.id;
+        });
         dispatch(setFetchedChats(chatsToSet));
       })
       .catch((error) => {
@@ -60,7 +70,7 @@ function Main() {
       console.log(message, "message - chat!");
       if (message?.fromNumber === user?.phoneNumber) {
         message.status = "DELIVERED";
-      }else{
+      } else {
         dispatch(
           setMessage({
             ...message,
@@ -140,16 +150,21 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    console.log("connecting to socket!")
-    connectToStompClient();
-    // return disconnectStompClient()
-  }, []);
+    if (connectionStatus === "disconnected") {
+      connectToStompClient();
+    }
+    return () => {
+      if (connectionStatus === "connected") {
+        disconnectStompClient();
+      }
+    };
+  }, [connectionStatus]);
 
   useEffect(() => {
     const selectedChat = chatsFromGlobalState?.find((chat: ChatInterface) => {
       return chat.selected === true;
     });
-    if(selectedChat && user?.id && selectedChat?.id) {
+    if (selectedChat && user?.id && selectedChat?.id) {
       fetchSelectedChatMessages([user?.id, selectedChat?.id]);
     }
   }, [chatsFromGlobalState]);
@@ -158,6 +173,20 @@ function Main() {
       <ResizablePanelGroup direction="horizontal">
         <Sidebar>
           <div className="flex justify-center items-center h-[10%] bg-gray-100">
+            <div className="absolute left-4">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  axiosInstance.post("/v1/logout").then(() => {
+                    navigate("/");
+                    window.location.reload();
+                  });
+                }}
+              >
+                <CiLogout className="h-4 w-4" />
+              </Button>
+            </div>
             <p className="logo">Chat Connect</p>
           </div>
           <ChatList

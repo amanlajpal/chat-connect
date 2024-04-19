@@ -1,5 +1,6 @@
 package com.project.chatconnectbackend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,6 +8,7 @@ import com.project.chatconnectbackend.controller.v1.ControllerV1;
 
 @RestController
 @RequestMapping(path="/api")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class MainController {
     
     private final ControllerV1 controllerV1;
