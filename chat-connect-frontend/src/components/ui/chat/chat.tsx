@@ -51,13 +51,6 @@ function Chat(props: {
         </Avatar>
         <CardHeader className="py-3">
           <TypographyH4 text={chat?.name || ""} />
-          {chat?.lastMessage ? (
-            <CardDescription>{chat?.lastMessage}</CardDescription>
-          ) : (
-            <CardDescription className="text-muted-foreground">
-              No messages yet
-            </CardDescription>
-          )}
         </CardHeader>
         <p className="text-right text-sm text-muted-foreground ml-auto">
           {chat?.lastMessageTime || "Just now"}
