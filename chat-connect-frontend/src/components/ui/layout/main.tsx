@@ -190,7 +190,9 @@ function Main() {
             <p className="logo">Chat Connect</p>
           </div>
           <ChatList
-            chats={chatsFromGlobalState}
+            chats={chatsFromGlobalState?.filter((chat: ChatInterface) => {
+              return chat.id !== user?.id;
+            })}
             handleChatSelection={handleChatSelection}
           />
         </Sidebar>
