@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../common/button";
 import { Textarea } from "../common/textarea";
 import { AiOutlineSend } from "react-icons/ai";

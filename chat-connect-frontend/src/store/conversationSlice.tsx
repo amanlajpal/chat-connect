@@ -2,44 +2,7 @@ import Conversation from "@/interfaces/Conversation";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  messages: [
-    {
-      messageText: "Hi Deep!",
-      fromNumber: "9354388817",
-      status: "SENT",
-      conversationId: 1,
-    },
-    {
-      messageText: "Hello Aman!",
-      fromNumber: "8766228432",
-      status: "SENT",
-      conversationId: 1,
-    },
-    {
-      messageText: "How are you?",
-      fromNumber: "9354388817",
-      status: "DELIVERED",
-      conversationId: 1,
-    },
-    {
-      messageText: "I am good!",
-      fromNumber: "8766228432",
-      status: "SENT",
-      conversationId: 1,
-    },
-    {
-      messageText: "How about you?",
-      fromNumber: "8766228432",
-      status: "DELIVERED",
-      conversationId: 1,
-    },
-    {
-      messageText: "I am good too!",
-      fromNumber: "9354388817",
-      status: "SENT",
-      conversationId: 1,
-    },
-  ],
+  messages: [],
   id: 1,
 } as Conversation;
 

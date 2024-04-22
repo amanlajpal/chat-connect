@@ -16,7 +16,6 @@ import {
   TabsTrigger,
 } from "@/components/ui/common/tabs";
 import { setUser } from "@/store/userSlice";
-import { joinChat } from "@/store/chatsSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
