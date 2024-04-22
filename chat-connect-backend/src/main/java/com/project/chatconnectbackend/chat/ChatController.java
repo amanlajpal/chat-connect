@@ -80,7 +80,6 @@ public class ChatController {
         if (sessionAttributes != null) {
             sessionAttributes.put("userId", user.getId());
         }
-        logger.info("User Joined Chat connect - header accessor - " + headerAccessor);
         Chat chat = new Chat();
         chat.setId(user.getId());
         chat.setLastMessage(null);
