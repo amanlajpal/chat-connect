@@ -97,116 +97,124 @@ export function Authentication() {
   };
   return (
     <div className="flex items-center justify-center h-screen overflow-y-hidden">
-      <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="signup">Signup</TabsTrigger>
-        </TabsList>
-        <TabsContent value="login">
-          <Card>
-            <CardHeader>
-              <CardTitle>Login</CardTitle>
-              <CardDescription>
-                Enter your credentials to access your account.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  value={loginData?.phoneNumber || ""}
-                  onChange={(event) =>
-                    setLoginData((prevLoginData) => {
-                      return {
-                        ...prevLoginData,
-                        phoneNumber: event?.target?.value,
-                      };
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={loginData?.password || ""}
-                  onChange={(event) =>
-                    setLoginData((prevLoginData) => {
-                      return {
-                        ...prevLoginData,
-                        password: event?.target?.value,
-                      };
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleLogin}>Login</Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="signup">
-          <Card>
-            <CardHeader>
-              <CardTitle>Signup</CardTitle>
-              <CardDescription>
-                Enter your details to create an account.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  value={signupData?.name || ""}
-                  onChange={(event) =>
-                    setSignupData((prevSignupData) => {
-                      return { ...prevSignupData, name: event?.target?.value };
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  value={signupData?.phoneNumber || ""}
-                  onChange={(event) =>
-                    setSignupData((prevSignupData) => {
-                      return {
-                        ...prevSignupData,
-                        phoneNumber: event?.target?.value,
-                      };
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={signupData?.password || ""}
-                  onChange={(event) =>
-                    setSignupData((prevSignupData) => {
-                      return {
-                        ...prevSignupData,
-                        password: event?.target?.value,
-                      };
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleSubmit}>Signup</Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <div>
+        <div className="text-center logo my-2">Chat Connect</div>
+        <div>
+          <Tabs defaultValue="login" className="w-[400px]">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="login">Login</TabsTrigger>
+              <TabsTrigger value="signup">Signup</TabsTrigger>
+            </TabsList>
+            <TabsContent value="login">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Login</CardTitle>
+                  <CardDescription>
+                    Enter your credentials to access your account.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={loginData?.phoneNumber || ""}
+                      onChange={(event) =>
+                        setLoginData((prevLoginData) => {
+                          return {
+                            ...prevLoginData,
+                            phoneNumber: event?.target?.value,
+                          };
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={loginData?.password || ""}
+                      onChange={(event) =>
+                        setLoginData((prevLoginData) => {
+                          return {
+                            ...prevLoginData,
+                            password: event?.target?.value,
+                          };
+                        })
+                      }
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={handleLogin}>Login</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="signup">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Signup</CardTitle>
+                  <CardDescription>
+                    Enter your details to create an account.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={signupData?.name || ""}
+                      onChange={(event) =>
+                        setSignupData((prevSignupData) => {
+                          return {
+                            ...prevSignupData,
+                            name: event?.target?.value,
+                          };
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={signupData?.phoneNumber || ""}
+                      onChange={(event) =>
+                        setSignupData((prevSignupData) => {
+                          return {
+                            ...prevSignupData,
+                            phoneNumber: event?.target?.value,
+                          };
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={signupData?.password || ""}
+                      onChange={(event) =>
+                        setSignupData((prevSignupData) => {
+                          return {
+                            ...prevSignupData,
+                            password: event?.target?.value,
+                          };
+                        })
+                      }
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={handleSubmit}>Signup</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
