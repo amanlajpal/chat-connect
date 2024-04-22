@@ -22,22 +22,24 @@ function ChatInput() {
         status: MessageStatus.SENT,
         conversationId: conversation?.id,
       };
-      stompClient.send(
-        "/app/chat.sendMessage",
-        {},
-        JSON.stringify(message)
-      );
+      stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
       dispatch(
         setMessage({
           ...message,
         })
       );
-    }else{
+    } else {
       console.log("Error sending message!");
     }
   }
   return (
-    <div className="flex gap-4 fixed bottom-4 w-[60%]">
+    <div
+      className="flex gap-4 relative bottom-4 w-[90%] my-2"
+      style={{
+        left: "50%",
+        transform: "translate(-50%, 0%)",
+      }}
+    >
       <Textarea
         placeholder="Type your message here."
         className="w-[85%] min-h-[4rem]"
