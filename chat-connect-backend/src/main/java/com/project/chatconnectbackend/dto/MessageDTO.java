@@ -1,6 +1,7 @@
 package com.project.chatconnectbackend.dto;
 
-import com.project.chatconnectbackend.model.enumValues.MessageStatus;
+
+import com.project.chatconnectbackend.enumValues.MessageStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

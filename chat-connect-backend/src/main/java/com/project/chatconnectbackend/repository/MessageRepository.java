@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.project.chatconnectbackend.model.Message;
-import com.project.chatconnectbackend.model.enumValues.MessageStatus;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called messageRepository
 

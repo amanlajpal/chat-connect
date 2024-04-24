@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.chatconnectbackend.chat.Chat;
 import com.project.chatconnectbackend.dto.AuthenticationRequest;
 import com.project.chatconnectbackend.dto.AuthenticationResponse;
+import com.project.chatconnectbackend.dto.Chat;
 import com.project.chatconnectbackend.dto.RegisterRequest;
 import com.project.chatconnectbackend.model.Conversation;
 import com.project.chatconnectbackend.model.GroupMember;
@@ -171,7 +171,7 @@ public class ControllerV1 {
           groupMember.setConversation(createdConversation);
           Optional<User> user = userRepository.findById(Objects.requireNonNull(userId));
           if (user.isPresent()) {
-            groupMember.setUsers(user.get()); // Fix: Pass the actual User object instead of Optional<User>
+            groupMember.setUsers(user.get()); // Pass the actual User object instead of Optional<User>
           }
           GroupMember createdGroupMember = groupMemberRepository.save(groupMember);
           createdGroupMembers.add(createdGroupMember);

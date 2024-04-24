@@ -3,9 +3,8 @@ package com.project.chatconnectbackend.model;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
-import com.project.chatconnectbackend.model.enumValues.MessageStatus;
+import com.project.chatconnectbackend.enumValues.MessageStatus;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

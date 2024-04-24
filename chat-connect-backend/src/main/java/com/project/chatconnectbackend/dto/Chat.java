@@ -1,6 +1,8 @@
-package com.project.chatconnectbackend.chat;
+package com.project.chatconnectbackend.dto;
 
 import java.util.Date;
+
+import com.project.chatconnectbackend.enumValues.ChatStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

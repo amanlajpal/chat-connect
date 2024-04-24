@@ -1,6 +1,6 @@
-package com.project.chatconnectbackend.chat;
+package com.project.chatconnectbackend.enumValues;
 
-public enum ChatStatus {
+public enum MessageStatus {
     SENT,
     DELIVERED,
     READ,
