@@ -86,7 +86,7 @@ function Home() {
         title: `${chat?.name} joined the chat!`,
       });
     } else if (message.status === "LEAVE") {
-      const leaverNumber = message?.fromNumber;
+      const leaverNumber = message?.phoneNumber;
       const chat = message;
       dispatch(leaveChat(leaverNumber));
       toast({
