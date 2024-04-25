@@ -94,7 +94,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
+    public ResponseDTO authenticate(AuthenticationRequest request, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -113,16 +113,15 @@ public class AuthenticationService {
             cookie.setSecure(false);
             response.addCookie(cookie);
 
-            return AuthenticationResponse
+            return ResponseDTO
                     .builder()
-                    .token(jwt)
                     .message("Logged in! Welcome " + user.getFirstName())
-                    .status("success")
+                    .status(ResponseStatus.success)
                     .data(user)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 

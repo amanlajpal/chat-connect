@@ -48,10 +48,11 @@ public class ControllerV1 {
   }
 
   @PostMapping(path = "/auth/login", produces = "application/json") // Map ONLY POST Requests
-  public @ResponseBody ResponseEntity<AuthenticationResponse> loginUser(
+  public @ResponseBody ResponseEntity<ResponseDTO> loginUser(
       @RequestBody AuthenticationRequest request, HttpServletResponse response) {
     try {
-      return ResponseEntity.ok(authenticationService.authenticate(request, response));
+      ResponseDTO responseBody = authenticationService.authenticate(request, response);
+      return new Response().send(responseBody);
     } finally {
       System.out.println("Login controller called!");
     }
@@ -61,8 +62,8 @@ public class ControllerV1 {
   public @ResponseBody ResponseEntity<?> getUserFromToken(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      ResponseDTO responseObj = authenticationService.getUserFromToken(request, response);
-      return new Response().send(responseObj);
+      ResponseDTO responseBody = authenticationService.getUserFromToken(request, response);
+      return new Response().send(responseBody);
     } finally {
       System.out.println("Get User From Token controller called!");
     }
