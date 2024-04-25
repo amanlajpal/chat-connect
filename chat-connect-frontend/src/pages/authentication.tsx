@@ -60,7 +60,7 @@ export function Authentication() {
         console.log(error, "error!");
         toast({
           title: `Signup Failed! ${error?.response?.data?.message}`,
-          description: `Please try again with a different phone number`,
+          description: `Please try again with a different phone number!`,
           variant: "destructive",
         });
       });
@@ -89,7 +89,9 @@ export function Authentication() {
         console.log(error, "error!");
         toast({
           title: error?.response?.data?.message || "Login Failed!",
-          description: `Please try again with a different phone number`,
+          description: error?.response?.data?.message
+            ? undefined
+            : `Please try again with a different phone number or password!`,
           variant: "destructive",
         });
       });
