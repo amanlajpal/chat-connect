@@ -11,7 +11,7 @@ const GetUserFromToken = () => {
 
   const getToken = () => {
     axiosInstance
-      .get("/v1/getUserFromToken")
+      .get("/v1/auth/getUserFromToken")
       .then((response) => {
         const userRegistered = response?.data?.data;
         dispatch(

@@ -50,7 +50,7 @@ function Home() {
         url: "/v1/allChats",
       })
       .then((response) => {
-        let chatsToSet = response?.data?.data;
+        let chatsToSet = response?.data?.data?.chats || [];
         chatsToSet = chatsToSet.filter((chat: any) => {
           return chat.id !== user.id;
         });
@@ -59,8 +59,7 @@ function Home() {
       .catch((error) => {
         console.log(error, "error!");
         toast({
-          title: error?.response?.data?.message || "Login Failed!",
-          description: `Please try again with a different phone number`,
+          title: error?.response?.data?.message || "Fetching all chats failed!",
           variant: "destructive",
         });
       });
