@@ -13,6 +13,8 @@ import com.project.chatconnectbackend.config.JwtService;
 import com.project.chatconnectbackend.dto.AuthenticationRequest;
 import com.project.chatconnectbackend.dto.AuthenticationResponse;
 import com.project.chatconnectbackend.dto.RegisterRequest;
+import com.project.chatconnectbackend.dto.ResponseDTO;
+import com.project.chatconnectbackend.enumValues.ResponseStatus;
 import com.project.chatconnectbackend.model.User;
 import com.project.chatconnectbackend.repository.UserRepository;
 
@@ -143,27 +145,40 @@ public class AuthenticationService {
         }
     }
 
-    public Map<String, Object> getUserFromToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseDTO getUserFromToken(HttpServletRequest request, HttpServletResponse response) {
         try {
             Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
             if (jwtCookie == null) {
-                Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("status", "error");
-                responseMap.put("message", "No user logged in!");
-                return responseMap;
+                return ResponseDTO.builder()
+                        .status(ResponseStatus.error)
+                        .message("No user logged in!")
+                        .errorCode(401) // Unauthorized
+                        .build();
             } else {
                 User user = userRepository.findByPhoneNumber(jwtService.extractUsername(jwtCookie.getValue()))
                         .orElseThrow();
-                Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("status", "success");
-                responseMap.put("data", user);
-                responseMap.put("message", "Logged out successfully!");
-                return responseMap;
+                if (user != null) {
+                    user.setPassword(null);
+                    return ResponseDTO.builder()
+                            .status(ResponseStatus.success)
+                            .data(user)
+                            .message("User is logged in!")
+                            .build();
+                } else {
+                    return ResponseDTO.builder()
+                            .status(ResponseStatus.error)
+                            .message("No user logged in!")
+                            .errorCode(401) // Unauthorized
+                            .build();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseDTO.builder()
+                    .status(ResponseStatus.error)
+                    .message("No user logged in!")
+                    .errorCode(401) // Unauthorized
+                    .build();
         }
-        return null;
     }
-
 }
