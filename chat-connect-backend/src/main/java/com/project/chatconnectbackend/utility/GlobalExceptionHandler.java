@@ -29,11 +29,9 @@ public class GlobalExceptionHandler {
         Throwable cause = ex.getCause();
         if (cause instanceof ConstraintViolationException) {
             ConstraintViolationException constraintViolationException = (ConstraintViolationException) cause;
-            // String constraintName = constraintViolationException.getConstraintName();
             String message = constraintViolationException.getMessage();
             
             // Extract more details as needed from constraintViolationException
-            
             Map<String, Object> errorResponseBody = new HashMap<>();
             errorResponseBody.put("status", "error");
             errorResponseBody.put("message", "Data integrity violation: " + message);
@@ -45,16 +43,6 @@ public class GlobalExceptionHandler {
                                  .body(createErrorResponse("An error occurred: " + ex.getMessage()));
         }
     }
-
-    // @ExceptionHandler(DataIntegrityViolationException.class)
-    // @ResponseBody
-    // public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(
-    //         DataIntegrityViolationException ex) {
-    //     Map<String, Object> errorResponseBody = new HashMap<>();
-    //     errorResponseBody.put("status", "error");
-    //     errorResponseBody.put("message", "User with the provided phone number or email already exists");
-    //     return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponseBody);
-    // }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseBody
