@@ -175,7 +175,7 @@ function Home() {
                 variant="outline"
                 size="icon"
                 onClick={() => {
-                  axiosInstance.post("/v1/logout").then(() => {
+                  axiosInstance.post("/v1/auth/logout").then(() => {
                     navigate("/");
                     window.location.reload();
                   });
