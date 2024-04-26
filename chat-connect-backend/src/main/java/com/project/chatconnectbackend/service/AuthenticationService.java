@@ -34,8 +34,6 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         try {
-            // @ResponseBody means the returned String is the response, not a view name
-            // @RequestParam means it is a parameter from the GET or POST request
             // Split name by space
             String[] avatarUrls = new String[] {
                     "https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg",
