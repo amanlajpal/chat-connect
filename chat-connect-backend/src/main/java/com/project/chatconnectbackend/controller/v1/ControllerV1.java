@@ -69,11 +69,12 @@ public class ControllerV1 {
     }
   }
 
-  @PostMapping(path = "/logout", produces = "application/json") // Map ONLY POST Requests
+  @PostMapping(path = "/auth/logout", produces = "application/json") // Map ONLY POST Requests
   public @ResponseBody ResponseEntity<?> logoutUser(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      return ResponseEntity.ok(authenticationService.logout(request, response));
+      Object responseBody = authenticationService.logout(request, response);
+      return ResponseEntity.ok(responseBody);
     } finally {
       System.out.println("Logout controller called!");
     }
