@@ -5,9 +5,7 @@ import {
 } from "@/components/ui/common/avatar";
 import {
   Card,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/common/card";
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 
@@ -16,17 +14,14 @@ export function TypographyH4({ text }: { text: string }) {
     <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">{text}</h4>
   );
 }
-
 function Chat(props: {
   chat: ChatInterface;
   handleChatSelection: (chat: ChatInterface) => void;
 }) {
   const { chat, handleChatSelection } = props;
-
   const handleClick = () => {
     handleChatSelection(chat);
   };
-
   return (
     <div>
       <Card
@@ -59,5 +54,4 @@ function Chat(props: {
     </div>
   );
 }
-
 export default Chat;

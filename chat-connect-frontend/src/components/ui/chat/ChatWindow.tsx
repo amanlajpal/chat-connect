@@ -8,7 +8,6 @@ import {
 import { Chat as ChatInterface } from "@/interfaces/Chat";
 import Message from "@/interfaces/Message";
 import { ScrollArea } from "@/components/ui/common/scroll-area";
-
 function ChatWindow({
   selectedChat,
   selectedChatMessages,
@@ -54,5 +53,4 @@ function ChatWindow({
     </section>
   );
 }
-
 export default ChatWindow;

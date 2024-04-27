@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const GetUserFromToken = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const getToken = () => {
     axiosInstance
       .get("/v1/auth/getUserFromToken")
@@ -52,8 +51,6 @@ const GetUserFromToken = () => {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, []);
-
   return <div></div>;
 };
-
 export default GetUserFromToken;
