@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
-import com.project.chatconnectbackend.config.JwtService;
 import com.project.chatconnectbackend.dto.AuthenticationRequest;
 import com.project.chatconnectbackend.dto.AuthenticationResponse;
 import com.project.chatconnectbackend.dto.RegisterRequest;

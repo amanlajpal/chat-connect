@@ -1,6 +1,5 @@
 package com.project.chatconnectbackend.utility;
 
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import com.project.chatconnectbackend.dto.ResponseDTO;

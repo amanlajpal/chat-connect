@@ -1,4 +1,4 @@
-package com.project.chatconnectbackend.config;
+package com.project.chatconnectbackend.service;
 
 import java.util.Optional;
 import java.util.Objects;
