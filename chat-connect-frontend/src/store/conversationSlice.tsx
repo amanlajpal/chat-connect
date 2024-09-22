@@ -5,37 +5,37 @@ const initialState = {
   messages: [
     {
       messageText: "Hi Deep!",
-      fromNumber: "9354388817",
+      fromNumber: "1234567890",
       status: "SENT",
       conversationId: 1,
     },
     {
       messageText: "Hello Aman!",
-      fromNumber: "8766228432",
+      fromNumber: "0987654321",
       status: "SENT",
       conversationId: 1,
     },
     {
       messageText: "How are you?",
-      fromNumber: "9354388817",
+      fromNumber: "1234567890",
       status: "DELIVERED",
       conversationId: 1,
     },
     {
       messageText: "I am good!",
-      fromNumber: "8766228432",
+      fromNumber: "0987654321",
       status: "SENT",
       conversationId: 1,
     },
     {
       messageText: "How about you?",
-      fromNumber: "8766228432",
+      fromNumber: "0987654321",
       status: "DELIVERED",
       conversationId: 1,
     },
     {
       messageText: "I am good too!",
-      fromNumber: "9354388817",
+      fromNumber: "1234567890",
       status: "SENT",
       conversationId: 1,
     },
